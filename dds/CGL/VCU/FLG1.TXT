@@ -1,0 +1,402 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: FLG1.TXT
+ *	Version Number			: V2.2
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of FLG1 for ABB loco
+ *	Author				: Ajeesh A., Arun Raj
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *v2.1(23.03.2018)
+ * DDS 115-118  added 
+ *Modified by Mr. Arun Raj,for Inching mode application
+ *v2.2(19.11.2018)
+ *DDS 121   added
+ *---------------------------------------------------------------------------
+ */
+#1
+FLG1:0001-Lifesign from FLG2 missing
+$
+#2
+FLG1:0002-Lifesign from SLG1 missing
+$
+#3
+FLG1:0003-Lifesign from SLG2 missing
+$
+#4
+FLG1:0004-Lifesign from STB1 missing
+$
+#5
+FLG1:0005-Lifesign from STB2 missing
+$
+#6
+FLG1:0006-Lifesign from HBB1 missing
+$
+#7
+FLG1:0007-Lifesign from HBB2 missing
+$
+#8
+FLG1:0008-Lifesign from DDA1 missing
+$
+#9
+FLG1:0009-Lifesign from DDA2 missing
+$
+#10
+FLG1:0010-Lifesign from BUR1 missing
+$
+#11
+FLG1:0011-Lifesign from BUR2 missing
+$
+#12
+FLG1:0012-Lifesign from BUR3 missing
+$
+#13
+FLG1:0013-Lifesign from DIA1 missing
+$
+#14
+FLG1:0014-Trainbus disturbance - master
+$
+#15
+FLG1:0015-Trainbus disturbance - slave
+$
+#16
+FLG1:0016-Two cabs are occupied
+$
+#17
+FLG1:0017-Angle transmitter failed
+$
+#18
+FLG1:0018-Emergency stop - shutdown
+$
+#19
+FLG1:0019-Emergency brake pressure sw.
+$
+#20
+FLG1:0020-Emergency brake vigilance
+$
+#21
+FLG1:0021-Overspeed-110%
+$
+#22
+FLG1:0022-Brake electronics failed
+$
+#23
+FLG1:0023-Regenerative brake failed
+$
+#24
+FLG1:0024-MCE off - pan was down 10 min
+$
+#25
+FLG1:0025-Cab1 forward & revers selecte
+$
+#26
+FLG1:0026-Subsystem 02 & 03 off
+$
+#27
+FLG1:0027-Subsystem 13 & 14 off
+$
+#28
+FLG1:0028-Processor STB1 & STB2 off
+$
+#29
+FLG1:0029-Processor HBB1 & HBB2 off
+$
+#30
+FLG1:0030-Processor STB1 & HBB1 off
+$
+#31
+FLG1:0031-Processor STB2 & HBB2 off
+$
+#32
+FLG1:0032-Subsystem 06 & 07 off
+$
+#33
+FLG1:0033-Subsystem 06 & 08 off
+$
+#34
+FLG1:0034-Subsystem 07 & 08 off
+$
+#35
+FLG1:0035-S/R interlock - loco brake
+$
+#36
+FLG1:0036-S/R interlock - auto brake
+$
+#37
+FLG1:0037-S/R interlock - brake cock
+$
+#38
+FLG1:0038-S/R interlock - park brake
+$
+#39
+FLG1:0039-S/R interlock - emgbrk out
+$
+#40
+FLG1:0040-S/R interlock - main res. low
+$
+#41
+FLG1:0041-Primary voltage below minimum
+$
+#42
+FLG1:0042-Primary voltage above maximum
+$
+#43
+FLG1:0043-Simulation fault
+$
+#44
+FLG1:0044-Fire alarm
+$
+#45
+FLG1:0045-Cab2 forward & revers selecte
+$
+#46
+FLG1:0046-Timeout initialisation end B1
+$
+#47
+FLG1:0047-Timeout initialisation end B2
+$
+#48
+FLG1:0048-Timeout peri. test end B1
+$
+#49
+FLG1:0049-Timeout peri. test end B2
+$
+#50
+FLG1:0050-Timeout ALG test 1 end bogie1
+$
+#51
+FLG1:0051-Timeout ALG test 1 end bogie2
+$
+#52
+FLG1:0052-Timeout ALG test 2 end bogie1
+$
+#53
+FLG1:0053-Timeout ALG test 2 end bogie2
+$
+#54
+FLG1:0054-Timeout ALG ready bogie 1
+$
+#55
+FLG1:0055-Timeout ALG ready bogie 2
+$
+#56
+FLG1:0056-Timeout ext. prot. sh.dwn. B1
+$
+#57
+FLG1:0057-Timeout ext. prot. sh.dwn. B2
+$
+#58
+FLG1:0058-Timeout GUSP on bogie 1
+$
+#59
+FLG1:0059-Timeout GUSP on bogie 2
+$
+#60
+FLG1:0060-Timeout DClink ckt. charge B1
+$
+#61
+FLG1:0061-Timeout DClink ckt. charge B2
+$
+#62
+FLG1:0062-Timeout conv. cont. on bogie1
+$
+#63
+FLG1:0063-Timeout conv. cont. on bogie2
+$
+#64
+FLG1:0064-Timeout pulse enable bogie1
+$
+#65
+FLG1:0065-Timeout pulse enable bogie2
+$
+#66
+FLG1:0066-Timeout filter confg. bogie1
+$
+#67
+FLG1:0067-Timeout filter confg. bogie2
+$
+#68
+FLG1:0068-Timeout NSC pulse bogie1
+$
+#69
+FLG1:0069-Timeout NSC pulse bogie2
+$
+#70
+FLG1:0070-Timeout ASC pulse bogie1
+$
+#71
+FLG1:0071-Timeout ASC pulse bogie2
+$
+#72
+FLG1:0072-Timeout release shutdown B1
+$
+#73
+FLG1:0073-Timeout release shutdown B2
+$
+#74
+FLG1:0074-Timeout shutdown end bogie 1
+$
+#75
+FLG1:0075-Timeout shutdown end bogie 2
+$
+#76
+FLG1:0076-Timeout DC link precharge B1
+$
+#77
+FLG1:0077-Timeout DC link precharge B2
+$
+#78
+FLG1:0078-Timeout PTO act end bogie 1
+$
+#79
+FLG1:0079-Timeout PTO act end bogie 2$
+#80
+FLG1:0080-DIA1 battery not OK
+$
+#81
+FLG1:0081-Master def. bogie 1 mismatch
+$
+#82
+FLG1:0082-Master def. bogie 2 mismatch
+$
+#83
+FLG1:0083-SLG1 S/W version mismatch
+$
+#84
+FLG1:0084-SLG2 S/W version mismatch
+$
+#85
+FLG1:0085-Disturbance in filter
+$
+#86
+FLG1:0086-Dist. both trafo oil circuits
+$
+#87
+FLG1:0087-Dist. one trafo oil circuit
+$
+#88
+FLG1:0088-Smoke warning fire det. eq.
+$
+#89
+FLG1:0089-Lifesign from ZBV1 missing
+$
+#90
+FLG1:0090-Plausibility detect.BoBo/CoCo
+$
+#91
+FLG1:0091-Power on of MCE
+$
+#92
+FLG1:0092-Alarm chain pulling
+$
+#93
+FLG1:0093-SS01 main power off
+$
+#94
+FLG1:0094-SS02 traction bogie1 off
+$
+#95
+FLG1:0095-SS03 traction bogie2 off
+$
+#96
+FLG1:0096-SS04 harmonic filter
+$
+#97
+FLG1:0097-SS05 hotel load
+$
+#98
+FLG1:0098-SS06 auxiliary converter1 off
+$
+#99
+FLG1:0099-SS07 auxiliary converter2 off
+$
+#100
+FLG1:0100-SS08 auxiliary converter3 off
+$
+#101
+FLG1:0101-SS09 battery system off
+$
+#102
+FLG1:0102-SS10 brake system off
+$
+#103
+FLG1:0103-SS11 auxiliaries HB1 off
+$
+#104
+FLG1:0104-SS12 auxiliaries HB2 off
+$
+#105
+FLG1:0105-SS13 cab1 off
+$
+#106
+FLG1:0106-SS14 cab2 off
+$
+#107
+FLG1:0107-SS15 fire detection off
+$
+#108
+FLG1:0108-SS16 speedometer off
+$
+#109
+FLG1:0109-SS17 processor FLG1 off
+$
+#110
+FLG1:0110-SS18 processor FLG2 off
+$
+#111
+FLG1:0111-SS19 trainbus off
+$
+#113
+FLG1:0113-SS11 OC oil cooler blower1
+$
+#114
+FLG1:0114-SS12 OC oil cooler blower2
+$
+#115
+FLG1:0115- Inching Mode Activated
+$
+#116
+FLG1:0116-ZTEL operated
+$
+#117
+FLG1:0117-Power off of MCE
+$
+#118
+FLG1:0118-Constant speed switch stuck
+$
+#119
+FLG1:0119-NOSUB not yet used
+$
+#120
+FLG1:0120-NOSUB not yet used
+$
+#121
+FLG1:0121-Loco in Shunting MODE
+$
+#122
+FLG1:0122-NOSUB not yet used
+$
+#123
+FLG1:0123-NOSUB not yet used
+$
+#124
+FLG1:0124-NOSUB not yet used
+$
+#125
+FLG1:0125-NOSUB not yet used
+$
+#126
+FLG1:0126-NOSUB not yet used
+$
+#127
+FLG1:0127-NOSUB not yet used
+$
+#128
+FLG1:0128-NOSUB not yet used
+$

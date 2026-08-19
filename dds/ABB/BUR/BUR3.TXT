@@ -1,0 +1,284 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: BUR3.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of BUR3 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *---------------------------------------------------------------------------
+ */
+#1
+BUR3:0001-Lifesign from FLG missing
+$
+#2
+BUR3:0002-Inverter fault
+$
+#3
+BUR3:0003-Inverter overcurrent
+$
+#4
+BUR3:0004-DC-link voltage too low
+$
+#5
+BUR3:0005-DC-link overcurrent
+$
+#6
+BUR3:0006-DC-link overvoltage
+$
+#7
+BUR3:0007-Frequency disturbance
+$
+#8
+BUR3:0008-Contactor 52/3 will not open
+$
+#9
+BUR3:0009-Contactor 52/3 will not close
+$
+#10
+BUR3:0010-Battery charger overcurrent
+$
+#11
+BUR3:0011-Battery overcurrent
+$
+#12
+BUR3:0012-MCB battery charger is open
+$
+#13
+BUR3:0013-Battery voltage below 92 Volt
+$
+#14
+BUR3:0014-Battery voltage below 86 Volt
+$
+#15
+BUR3:0015-Battery voltage below 82 Volt
+$
+#16
+BUR3:0016-Bat. charge current below 10A
+$
+#17
+BUR3:0017-Self-test periph. I/O failed
+$
+#18
+BUR3:0018-Input voltage not ok
+$
+#19
+BUR3:0019-Aux converter temp > up limit
+$
+#20
+BUR3:0020-Spare
+$
+#21
+BUR3:0021-Spare
+$
+#22
+BUR3:0022-Spare
+$
+#23
+BUR3:0023-Spare
+$
+#24
+BUR3:0024-Spare
+$
+#25
+BUR3:0025-Spare
+$
+#26
+BUR3:0026-Input voltage not ok
+$
+#27
+BUR3:0027-Input Fuse Fail
+$
+#28
+BUR3:0028-Input Over current
+$
+#29
+BUR3:0029-Input Current sensor fail
+$
+#30
+BUR3:0030-Charging fail
+$
+#31
+BUR3:0031-Lifesign missing from FLG
+$
+#32
+BUR3:0032-Input side Earthfault
+$
+#33
+BUR3:0033-Output side Earthfault
+$
+#34
+BUR3:0034-Rectifier GDU Fault
+$
+#35
+BUR3:0035-DC link slew rate too high
+$
+#36
+BUR3:0036-DC link over voltage
+$
+#37
+BUR3:0037-DC link voltage too low
+$
+#38
+BUR3:0038-Dist comm PEC-VLU GDU
+$
+#39
+BUR3:0039-VLU IGBT Fail
+$
+#40
+BUR3:0040-VLU GDU Fault
+$
+#41
+BUR3:0041-VLU Over current
+$
+#42
+BUR3:0042-VLU Open circuit
+$
+#43
+BUR3:0043-VLU Resistor too hot
+$
+#44
+BUR3:0044-VLU Current sensor fail
+$
+#45
+BUR3:0045-Inverter GDU Fault
+$
+#46
+BUR3:0046-Inverter Curr sensor error
+$
+#47
+BUR3:0047-Inverter IGBT Fail
+$
+#48
+BUR3:0048-Converter Over tempertaure
+$
+#49
+BUR3:0049-Inverter Over Current
+$
+#50
+BUR3:0050-Inverter Over Curr limit
+$
+#51
+BUR3:0051-Inverter Curr sensor fail
+$
+#52
+BUR3:0052-Output unbalance current
+$
+#53
+BUR3:0053-Main controller fail
+$
+#54
+BUR3:0054-Dist comm PEC-Inverter GDU
+$
+#55
+BUR3:0055-Dist comm PEC-Rectifier GDU
+$
+#56
+BUR3:0056-Fan MCB tripped
+$
+#57
+BUR3:0057-Control voltage err
+$
+#58
+BUR3:0058-spare
+$
+#59
+BUR3:0059-spare
+$
+#60
+BUR3:0060-Contactor Q52/3 will not close
+$
+#61
+BUR3:0061-spare
+$
+#62
+BUR3:0062-spare
+$
+#63
+BUR3:0063-spare
+$
+#64
+BUR3:0064-spare
+$
+#65
+BUR3:0065-Contactor Q52/3 will not open
+$
+#66
+BUR3:0066-spare
+$
+#67
+BUR3:0067-spare
+$
+#68
+BUR3:0068-Contactor Q52/41 will not open
+$
+#69
+BUR3:0069-Contactor Q52/42 will not open
+$
+#70
+BUR3:0070-spare
+$
+#71
+BUR3:0071-spare
+$
+#72
+BUR3:0072-spare
+$
+#73
+BUR3:0073-spare
+$
+#74
+BUR3:0074-Battery Charger Trip
+$
+#75
+BUR3:0075-BCC Over Temperature
+$
+#76
+BUR3:0076-Battery overvoltage
+$
+#77
+BUR3:0077-Battery voltage below 92
+$
+#78
+BUR3:0078-Battery voltage below 86
+$
+#79
+BUR3:0079-Battery voltage below 82
+$
+#80
+BUR3:0080-spare
+$
+#81
+BUR3:0081-spare
+$
+#82
+BUR3:0082-spare
+$
+#83
+BUR3:0083-spare
+$
+#84
+BUR3:0084-spare
+$
+#85
+BUR3:0085-spare
+$
+#86
+BUR3:0086-spare
+$
+#87
+BUR3:0087-spare
+$
+#88
+BUR3:0088-spare
+$
+#89
+BUR3:0089-spare
+$

@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VCU Fault DDS Viewer</title>
+  <link rel="stylesheet" href="styles.css?v=20260817-2">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="topbar-spacer" aria-hidden="true"></div>
+      <div class="brand-block">
+        <h1>CDAC VCU FAULT ANALYSER</h1>
+        <p class="developer-credit">Developed by ELS/ED</p>
+        <p id="fileStatus">No log loaded</p>
+      </div>
+      <div class="actions">
+        <fieldset class="propulsion-control">
+          <legend>Propulsion</legend>
+          <label>
+            <input type="radio" name="propulsion" value="ABB">
+            <span>ABB</span>
+          </label>
+          <label>
+            <input type="radio" name="propulsion" value="CGL" checked>
+            <span>CGL</span>
+          </label>
+        </fieldset>
+        <label class="file-button" title="Open VCU binary txt log">
+          <span aria-hidden="true">+</span>
+          <span>Upload TXT</span>
+          <input id="fileInput" type="file" accept=".txt,.log,*/*">
+        </label>
+        <button id="exportHtml" type="button" disabled title="Download a standalone interactive report with all fault DDS and environment data">HTML Report</button>
+        <button id="exportFaults" type="button" disabled title="Export the fault list as CSV">Fault CSV</button>
+        <button id="exportEnv" type="button" disabled title="Export all decoded environment rows as CSV">Env CSV</button>
+      </div>
+    </header>
+
+    <section class="summary-strip" aria-label="Loaded log summary">
+      <div>
+        <strong id="recordCount">0</strong>
+        <span>log records</span>
+      </div>
+      <div>
+        <strong id="faultCount">0</strong>
+        <span>fault entries found</span>
+      </div>
+      <div>
+        <strong id="knownCount">0</strong>
+        <span>faults with DDS text</span>
+      </div>
+      <div>
+        <strong id="rangeText">-</strong>
+        <span>date range</span>
+      </div>
+    </section>
+
+    <section class="fault-panel">
+      <div class="panel-head">
+        <nav class="tabs" aria-label="Views">
+          <button id="faultListTab" class="active" type="button">Fault DDS</button>
+          <button id="faultMatrixTab" type="button">Fault Count Matrix</button>
+          <button id="depthAnalysisTab" type="button">Depth Analysis</button>
+        </nav>
+        <div id="faultFilters" class="filters">
+          <input id="searchBox" type="search" placeholder="Search fault, processor, date..." disabled>
+          <select id="statusFilter" disabled>
+            <option value="all">All status</option>
+            <option value="90">Info1 90</option>
+            <option value="10">Info1 10</option>
+            <option value="undefined">Undefined</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="faultListView" class="table-wrap view-panel">
+        <table id="faultTable">
+          <thead>
+            <tr>
+              <th>SL_No</th>
+              <th>Count</th>
+              <th>Date &amp; Time</th>
+              <th>Fault</th>
+              <th>Processor</th>
+              <th>Info1</th>
+              <th>Code</th>
+              <th>Env</th>
+            </tr>
+          </thead>
+          <tbody id="faultBody">
+            <tr class="empty-row">
+              <td colspan="8">Upload TXT</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="matrixView" class="view-panel exportable-view" hidden>
+        <div class="view-export-bar">
+          <strong>Fault Count Matrix</strong>
+          <div>
+            <button id="matrixExcelExport" type="button" disabled>Excel</button>
+            <button id="matrixPdfExport" type="button" disabled>PDF</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="matrixTable">
+            <thead>
+              <tr>
+                <th>Fault</th>
+                <th>Processor</th>
+                <th>DDS Code</th>
+                <th>Occurrences</th>
+                <th>First Seen</th>
+                <th>Last Seen</th>
+              </tr>
+            </thead>
+            <tbody id="matrixBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <section id="occurrenceView" class="view-panel occurrence-view" hidden>
+        <header class="occurrence-head">
+          <button id="occurrenceBack" type="button" title="Back to fault count matrix">
+            <span aria-hidden="true">&#8592;</span>
+            <span>Matrix</span>
+          </button>
+          <div>
+            <h2 id="occurrenceTitle">Fault occurrences</h2>
+            <p id="occurrenceSubtitle"></p>
+          </div>
+        </header>
+        <div class="table-wrap">
+          <table id="occurrenceTable">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>SL_No</th>
+                <th>Date &amp; Time</th>
+                <th>Processor</th>
+                <th>Info1</th>
+                <th>Environment Words</th>
+              </tr>
+            </thead>
+            <tbody id="occurrenceBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="depthSelectionView" class="view-panel depth-selection-view" hidden>
+        <div class="depth-toolbar">
+          <p><strong id="depthSelectedCount">0</strong> fault occurrences selected</p>
+          <div>
+            <button id="depthClearSelection" type="button" disabled>Clear selection</button>
+            <button id="depthChooseParameters" class="primary-button" type="button" disabled>Choose Environment Parameters</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="depthTable">
+            <thead>
+              <tr>
+                <th class="checkbox-column"><input id="depthSelectAll" type="checkbox" aria-label="Select all visible faults"></th>
+                <th>SL_No</th>
+                <th>Date &amp; Time</th>
+                <th>Fault</th>
+                <th>Processor</th>
+                <th>Info1</th>
+                <th>Code</th>
+                <th>Env</th>
+              </tr>
+            </thead>
+            <tbody id="depthBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="depthResultsView" class="view-panel depth-results-view" hidden>
+        <header class="analysis-head">
+          <button id="depthResultsBack" type="button" title="Back to fault selection">
+            <span aria-hidden="true">&#8592;</span>
+            <span>Fault selection</span>
+          </button>
+          <div>
+            <h2>Depth Analysis</h2>
+            <p id="depthResultsSubtitle"></p>
+          </div>
+          <div class="analysis-actions">
+            <button id="depthExcelExport" type="button">Excel</button>
+            <button id="depthPdfExport" type="button">PDF</button>
+            <button id="depthChangeParameters" type="button">Change parameters</button>
+          </div>
+        </header>
+        <div id="depthResultsBody" class="depth-results-body"></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="parameterDialog" class="parameter-dialog">
+    <div class="dialog-shell">
+      <header class="parameter-dialog-head">
+        <div>
+          <h2>Choose Environment Parameters</h2>
+          <p id="parameterDialogSubtitle"></p>
+        </div>
+        <button id="parameterDialogClose" class="icon-button" type="button" aria-label="Close parameter selection">&#215;</button>
+      </header>
+      <div class="parameter-toolbar">
+        <input id="parameterSearch" type="search" placeholder="Search process value or signal...">
+        <div>
+          <button id="parameterSelectVisible" type="button">Select visible</button>
+          <button id="parameterClear" type="button">Clear</button>
+        </div>
+      </div>
+      <div id="parameterList" class="parameter-list"></div>
+      <footer class="parameter-dialog-footer">
+        <span id="parameterSelectedCount">0 parameters selected</span>
+        <div>
+          <button id="parameterCancel" type="button">Cancel</button>
+          <button id="runDepthAnalysis" class="primary-button" type="button" disabled>Run Depth Analysis</button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <section id="detailScreen" class="detail-screen" hidden>
+    <header class="detail-titlebar">
+      <button id="backButton" type="button" title="Back to fault list">&#8592;</button>
+      <div>
+        <h2>Diagnostic Data Analysis</h2>
+        <p id="detailSubtitle"></p>
+      </div>
+      <div class="detail-export-actions">
+        <button id="detailExport" type="button" title="Export this fault environment as CSV">CSV</button>
+        <button id="detailExcelExport" type="button" title="Export this fault environment as Excel">Excel</button>
+        <button id="detailPdfExport" type="button" title="Export this fault environment as PDF">PDF</button>
+      </div>
+    </header>
+
+    <div class="detail-layout">
+      <aside class="disturbance-panel">
+        <h3 class="disturbance-heading">Fault Details</h3>
+        <div class="detail-fields">
+          <div class="field">
+            <label>Reference No.</label>
+            <output id="detailRef"></output>
+          </div>
+          <div class="field">
+            <label>Date &amp; Time</label>
+            <output id="detailDate"></output>
+          </div>
+          <div class="field">
+            <label>Processor</label>
+            <output id="detailProcessor"></output>
+          </div>
+          <div class="field">
+            <label>Propulsion DDS</label>
+            <output id="detailPropulsion"></output>
+          </div>
+          <div class="field">
+            <label>Fault count</label>
+            <output id="detailCount"></output>
+          </div>
+        </div>
+        <div class="field grow">
+          <label>Fault description</label>
+          <output id="detailFaultText" class="fault-description-output"></output>
+        </div>
+      </aside>
+
+      <section id="environmentPanel" class="environment-panel" data-scope="all">
+        <div class="section-title">
+          <span>Environment Data</span>
+          <div class="env-scope-tabs" role="group" aria-label="Environment value scope">
+            <button class="active" type="button" data-env-scope="all">All</button>
+            <button type="button" data-env-scope="global">Global</button>
+            <button type="button" data-env-scope="processor">Processor-specific</button>
+          </div>
+        </div>
+        <div id="envGrid" class="env-grid" data-scope="all">
+          <section class="env-block env-block-large" data-value-scope="global">
+            <h3>Binary Global Process Values</h3>
+            <div class="data-scroll">
+              <table>
+                <thead>
+                  <tr><th>ProcessValue</th><th>SignalName</th><th>SignalValue</th></tr>
+                </thead>
+                <tbody id="globalDigitalBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="env-block" data-value-scope="global">
+            <h3>Analog Global Process Values</h3>
+            <div class="data-scroll">
+              <table>
+                <thead>
+                  <tr><th>ProcessValue</th><th>SignalName</th><th>SignalValue</th></tr>
+                </thead>
+                <tbody id="globalAnalogBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="env-block env-block-large" data-value-scope="processor">
+            <h3 id="procDigitalTitle">Binary Processor Specific Process Values</h3>
+            <div class="data-scroll">
+              <table>
+                <thead>
+                  <tr><th>ProcessValue</th><th>SignalName</th><th>SignalValue</th></tr>
+                </thead>
+                <tbody id="procDigitalBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="env-block" data-value-scope="processor">
+            <h3 id="procAnalogTitle">Analog Processor Specific Process Values</h3>
+            <div class="data-scroll">
+              <table>
+                <thead>
+                  <tr><th>ProcessValue</th><th>SignalName</th><th>SignalValue</th></tr>
+                </thead>
+                <tbody id="procAnalogBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script src="vendor/jspdf.plugin.autotable.min.js"></script>
+  <script src="data/dictionaries.js"></script>
+  <script src="decoder.js?v=20260817-2"></script>
+  <script src="app.js?v=20260817-2"></script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+#1
+SLG2:0001-Inverter 1 Overcurrent
+$
+#2
+SLG2:0002-Inverter 2 Overcurrent
+$
+#3
+SLG2:0003-Inverter 3 Overcurrent
+$
+#4
+SLG2:0004-DC Link Does not discharge
+$
+#5
+SLG2:0005-Error synchronization
+$
+#6
+SLG2:0006-MUB temperature too hot
+$
+#7
+SLG2:0007-Lifesign from FLG is missing
+$
+#8
+SLG2:0008-Internal Comm. Disturbance
+$
+#9
+SLG2:0009-Error in crowbar IGBT
+$
+#10
+SLG2:0010-Line converter 1 isolation
+$
+#11
+SLG2:0011-Line converter 2 isolation
+$
+#12
+SLG2:0012-Error Sync on rectifier
+$
+#13
+SLG2:0013-L-R-C  circuit disturbance
+$
+#14
+SLG2:0014-spare
+$
+#15
+SLG2:0015-Converter oil pressure< Limit1
+$
+#16
+SLG2:0016-spare
+$
+#17
+SLG2:0017-Coolant temperature too high
+$
+#18
+SLG2:0018-Pressure oil trafo not okay
+$
+#19
+SLG2:0019-Transformer temperature>Limit2
+$
+#20
+SLG2:0020-Primary voltage < minimum
+$
+#21
+SLG2:0021-Primary voltage > maximum
+$
+#22
+SLG2:0022-Motor temperature > Limit
+$
+#23
+SLG2:0023-Filter current > maximum
+$
+#24
+SLG2:0024-BUR current > maximum
+$
+#25
+SLG2:0025-Primary current > maximum
+$
+#26
+SLG2:0026-Hotel load current > maximum
+$
+#27
+SLG2:0027-Earth fault DC link positiv
+$
+#28
+SLG2:0028-Dist. tractive braking effort
+$
+#29
+SLG2:0029-Speed > maximum
+$
+#30
+SLG2:0030-Earth fault DC link negativ
+$
+#31
+SLG2:0031-Earth fault in trafo or motor 
+$
+#32
+SLG2:0032-spare
+$
+#33
+SLG2:0033-Time-Out ALG with PTO
+$
+#34
+SLG2:0034-Disturbance GUSP stuck on
+$
+#35
+SLG2:0035-Disturbance GUSP stuck off
+$
+#36
+SLG2:0036-Precharge contactor stuck on
+$
+#37
+SLG2:0037-Precharge cont. stuck on fatal
+$
+#38
+SLG2:0038-Precharge contactor stuck off
+$
+#39
+SLG2:0039-Converter contactor stuck on
+$
+#40
+SLG2:0040-Converter contactor stuck off
+$
+#41
+SLG2:0041-Crowbar resistor too hot
+$
+#42
+SLG2:0042-Disturbance MUB test
+$
+#43
+SLG2:0043-DC link voltage does not rise
+$
+#44
+SLG2:0044-Dist. temp. sensor motor 1
+$
+#45
+SLG2:0045-Dist. temp. sensor motor 2
+$
+#46
+SLG2:0046-Dist. temp. sensor converter
+$
+#47
+SLG2:0047-Dist. wheel dia. correction A1
+$
+#48
+SLG2:0048-Dist. wheel dia. correction A2
+$
+#49
+SLG2:0049-Speed disturbance
+$
+#50
+SLG2:0050-TE/BE reduction
+$
+#51
+SLG2:0051-Time out ALG without PTO
+$
+#52
+SLG2:0052-Time out SLG
+$
+#53
+SLG2:0053-spare
+$
+#54
+SLG2:0054-Disturbance DC link capacitor
+$
+#55
+SLG2:0055-spare
+$
+#56
+SLG2:0056-Contactor 8.2 stuck off fatal
+$
+#57
+SLG2:0057-Contactor 8.2 stuck on fatal
+$
+#58
+SLG2:0058-Contactor 8.1 stuck off fatal
+$
+#59
+SLG2:0059-Contactor 8.1 stuck on fatal
+$
+#60
+SLG2:0060-Contactor 8.41 stuck off fatal
+$
+#61
+SLG2:0061-Contactor 8.41 stuck on fatal
+$
+#62
+SLG2:0062-overtemp in control electronic
+$
+#63
+SLG2:0063-Transformer temperature>Limit1
+$
+#64
+SLG2:0064-Bogie 1 wheel skidding
+$
+#65
+SLG2:0065-Contactor 8.2 stuck on
+$
+#66
+SLG2:0066-Low frequency catenary voltage
+$
+#67
+SLG2:0067-Temp filt disch resistor high
+$
+#68
+SLG2:0068-Dist. temp. sensor transformer
+$
+#69
+SLG2:0069-High frequency catenary voltag
+$
+#70
+SLG2:0070-Power reduction line voltage
+$
+#71
+SLG2:0071-Power reduction trafo. temp.
+$
+#72
+SLG2:0072-Power reduction conv. temp.
+$
+#73
+SLG2:0073-Contactor 8.1 stuck on
+$
+#74
+SLG2:0074-Temp. difference motors Bg1>Lm
+$
+#75
+SLG2:0075-Ventilation bogie BUR1 disturb
+$
+#76
+SLG2:0076-Acknowled. main contactor dist
+$
+#77
+SLG2:0077-Protective turn off ALG extern
+$
+#78
+SLG2:0078-Dist. wheel dia. correction A3
+$
+#79
+SLG2:0079-Ventilation bogie BUR2 disturb
+$
+#80
+SLG2:0080-Dist. temp. sensor motor 3
+$
+#81
+SLG2:0081-Warning: Loco is creeping
+$
+#82
+SLG2:0082-Warning: Motor damage possible
+$
+#83
+SLG2:0083-Error in Rectifier IGBT-s
+$
+#84
+SLG2:0084-Error in Inverter1 IGBT-s
+$
+#85
+SLG2:0085-Error in Inverter2 IGBT-s
+$
+#86
+SLG2:0086-Error in Inverter3 IGBT-s
+$
+#87
+SLG2:0087-Motor 1 Isolation
+$
+#88
+SLG2:0088-Motor 2 Isolation
+$
+#89
+SLG2:0089-Motor 3 Isolation
+$
+#90
+SLG2:0090-spare
+$
+#91
+SLG2:0091-Rectifier OverTemp
+$
+#92
+SLG2:0092-Rectifier Line 1 Overcurrent
+$
+#93
+SLG2:0093-Rectifier Line 2 Overcurrent
+$
+#94
+SLG2:0094-Inverter 1 Overtemperature
+$
+#95
+SLG2:0095-Inverter 2 Overtemperature
+$
+#96
+SLG2:0096-Inverter 3 Overtemperature
+$

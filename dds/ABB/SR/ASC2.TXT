@@ -1,0 +1,215 @@
+/*------------------------------------------------------------------------------------
+ *	File Name			: ASC2.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of ASC2 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *------------------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *-------------------------------------------------------------------------------------
+ */
+#1
+ASC2:0001-Triggering unit check failed
+$
+#2
+ASC2:0002-Wrong numb. of triggering uni
+$
+#3
+ASC2:0003-ADC not ready
+$
+#4
+ASC2:0004-ADC time out
+$
+#5
+ASC2:0005-MicOS disturbance
+$
+#6
+ASC2:0006-Error software
+$
+#7
+ASC2:0007-Fiber optics interf. powerfai
+$
+#8
+ASC2:0008-Error MVB
+$
+#9
+ASC2:0009-ZK not discharged
+$
+#10
+ASC2:0010-Error PS hardware
+$
+#11
+ASC2:0011-PS fault storage CGP
+$
+#12
+ASC2:0012-PS fault storage GBC
+$
+#13
+ASC2:0013-PS fault storage MC-Peri
+$
+#14
+ASC2:0014-Error CTR synchronization
+$
+#15
+ASC2:0015-Error calibration test
+$
+#16
+ASC2:0016-Error comparator test
+$
+#17
+ASC2:0017-Error transducer test
+$
+#18
+ASC2:0018-Error 100Hz-test
+$
+#19
+ASC2:0019-Error FSP Direct test
+$
+#20
+ASC2:0020-Error GUSP test
+$
+#31
+ASC2:0031-Error CTR computing time
+$
+#32
+ASC2:0032-Error CAM full
+$
+#33
+ASC2:0033-Error watchdog DSP
+$
+#34
+ASC2:0034-Error BS/MUB-GBC1
+$
+#35
+ASC2:0035-Error BS/MUB-GBC2
+$
+#36
+ASC2:0036-Error BS/MUB resistor interrp
+$
+#37
+ASC2:0037-Error plausibility Ud
+$
+#38
+ASC2:0038-Error plausibility Ud1
+$
+#39
+ASC2:0039-Error plausibility Ud2
+$
+#40
+ASC2:0040-Error U reference
+$
+#41
+ASC2:0041-Error BS/MUB short circuit
+$
+#42
+ASC2:0042-Error BS/MUB overload
+$
+#43
+ASC2:0043-Error Ud too small
+$
+#44
+ASC2:0044-Error FIFO memory full
+$
+#45
+ASC2:0045-Error all rot.speed chans. 1
+$
+#46
+ASC2:0046-Error all rot.speed chans. 2
+$
+#47
+ASC2:0047-Error plausibility Imot1
+$
+#48
+ASC2:0048-Error plausibility Imot2
+$
+#49
+ASC2:0049-Error clock frequency 1
+$
+#50
+ASC2:0050-Error clock frequency 2
+$
+#51
+ASC2:0051-Error rot.speed exceeds max.
+$
+#52
+ASC2:0052-Error tachogenerator 1
+$
+#53
+ASC2:0053-Error tachogenerator 2
+$
+#54
+ASC2:0054-Error tachogenerator 3
+$
+#55
+ASC2:0055-Error tachogenerator 4
+$
+#56
+ASC2:0056-Error M tolerance range
+$
+#71
+ASC2:0071-Triggering unit check failed
+$
+#72
+ASC2:0072-Wrong numb. of triggering uni
+$
+#73
+ASC2:0073-ADC not ready
+$
+#74
+ASC2:0074-ADC time out
+$
+#75
+ASC2:0075-MicOS disturbance
+$
+#76
+ASC2:0076-Error software
+$
+#77
+ASC2:0077-Fiber optics interf. powerfai
+$
+#78
+ASC2:0078-Error MVB
+$
+#79
+ASC2:0079-ZK not discharged
+$
+#80
+ASC2:0080-Error PS hardware
+$
+#81
+ASC2:0081-PS fault storage CGP
+$
+#82
+ASC2:0082-PS fault storage GBC
+$
+#83
+ASC2:0083-PS fault storage MC-Peri
+$
+#84
+ASC2:0084-Error CTR synchronization
+$
+#85
+ASC2:0085-Error calibration test
+$
+#86
+ASC2:0086-Error comparator test
+$
+#87
+ASC2:0087-Error transducer test
+$
+#88
+ASC2:0088-Error 100Hz-test
+$
+#89
+ASC2:0089-Error FSP Direct test
+$
+#90
+ASC2:0090-Error GUSP test
+$

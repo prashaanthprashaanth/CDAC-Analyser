@@ -1,0 +1,68 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: HBB1.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of HBB1 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *---------------------------------------------------------------------------
+ */
+#1
+HBB1:0001-Lifesign from FLG missing
+$
+#2
+HBB1:0002-VCB will not open
+$
+#3
+HBB1:0003-VCB will not close
+$
+#4
+HBB1:0004-Earth fault in Hotel load
+$
+#5
+HBB1:0005-Oil cooler blower MCB open
+$
+#6
+HBB1:0006-MR blower MCB open
+$
+#7
+HBB1:0007-TM 1 blower MCB open
+$
+#8
+HBB1:0008-MR scav. blower MCB open
+$
+#9
+HBB1:0009-Converter 1 pump MCB open
+$
+#10
+HBB1:0010-Transformer pump 1 MCB open
+$
+#11
+HBB1:0011-Scav. oil cooler MCB open
+$
+#12
+HBB1:0012-Earth fault 415/110 V circuit
+$
+#13
+HBB1:0013-Earth fault control circuit
+$
+#14
+HBB1:0014-Earth fault filter circuit
+$
+#15
+HBB1:0015-Fuse 415/110V circuit blown
+$
+#16
+HBB1:0016-Loco in banking operation
+$
+#18
+HBB1:0018-Capacitor MR-blower not off
+$

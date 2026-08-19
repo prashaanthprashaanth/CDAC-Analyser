@@ -1,0 +1,438 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: SLG2.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of SLG2 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *---------------------------------------------------------------------------
+ */
+#1
+SLG2:0001-Primary voltage > maximum
+$
+#2
+SLG2:0002-Primary voltage < minimum
+$
+#3
+SLG2:0003-Primary current > maximum
+$
+#4
+SLG2:0004-DC Link Voltage > maximum
+$
+#5
+SLG2:0005-DC Link Voltage < minimum
+$
+#6
+SLG2:0006-DC link voltage does not rise
+$
+#7
+SLG2:0007-Pre-Charge Blocked
+$
+#8
+SLG2:0008-Earth fault In Converter
+$
+#9
+SLG2:0009-DC Link Voltage ripple high
+$
+#10
+SLG2:0010-MUB temperature too hot
+$
+#11
+SLG2:0011-MUB Failure
+$
+#12
+SLG2:0012-Filter current > maximum
+$
+#13
+SLG2:0013-Hotel load current > maximum
+$
+#14
+SLG2:0014-BUR current > maximum
+$
+#15
+SLG2:0015-DC link slew rate too high
+$
+#16
+SLG2:0016-Dist. temp. sensor tranfo
+$
+#17
+SLG2:0017-Conv Coolant flow < Limit
+$
+#18
+SLG2:0018-Conv Coolant temp > Limit
+$
+#19
+SLG2:0019-Trafo Oil Pressure not ok
+$
+#20
+SLG2:0020-Transformer temperature>Limit
+$
+#21
+SLG2:0021-Conv Coolant level < Limit2
+$
+#22
+SLG2:0022-Converter temperature > Limit
+$
+#23
+SLG2:0023-Conv Coolant level < Limit1
+$
+#24
+SLG2:0024-Dist coolant temp sens conv
+$
+#25
+SLG2:0025-Dist. temp. sensor converter
+$
+#26
+SLG2:0026-Dist. current sensor MUB
+$
+#27
+SLG2:0027-Conv. coolant pump MCB Trip
+$
+#28
+SLG2:0028-Dist. Flow sensor converter
+$
+#29
+SLG2:0029-Dist pressure sensor trafo
+$
+#30
+SLG2:0030-Dist. Converter Internal fan-1 
+$
+#31
+SLG2:0031-Dist. Converter Internal fan-2 
+$
+#32
+SLG2:0032-Dist.commu SR1-PEC - SR2-PEC
+$
+#33
+SLG2:0033-Converter contactor stuck off
+$
+#34
+SLG2:0034-Converter contactor stuck on
+$
+#35
+SLG2:0035-Precharge contactor stuck off
+$
+#36
+SLG2:0036-Precharge contactor stuck on
+$
+#37
+SLG2:0037-Contactor 8.1 stuck off fatal
+$
+#38
+SLG2:0038-Contactor 8.2 stuck off fatal
+$
+#39
+SLG2:0039-Contactor 8.41 stuck off fatal
+$
+#40
+SLG2:0040-Temp filt disch resistor high
+$
+#41
+SLG2:0041-VCB stuck On
+$
+#42
+SLG2:0042-Other conv Line switch stuck
+$
+#43
+SLG2:0043-MUB Current > maximum
+$
+#44
+SLG2:0044-MUB GD card Failure
+$
+#45
+SLG2:0045-Dist.commu PEC – MUB GD
+$
+#46
+SLG2:0046-MUB IGBT Vce sat
+$
+#47
+SLG2:0047-MUB IGBT Failure
+$
+#48
+SLG2:0048-Input voltage low
+$
+#49
+SLG2:0049-DC link voltage meas card fail
+$
+#50
+SLG2:0050-Lifesign from FLG is missing
+$
+#51
+SLG2:0051-Dist In CAN Commu
+$
+#52
+SLG2:0052-VCU request - trip converter
+$
+#53
+SLG2:0053-VCU request – Conv isolate
+$
+#54
+SLG2:0054-GDPS-1 & 2 Failure
+$
+#55
+SLG2:0055-PEC Hardware failure
+$
+#56
+SLG2:0056-Dist In Commu PEC - PECInt1
+$
+#57
+SLG2:0057-Dist In Commu PEC - PECInt2
+$
+#58
+SLG2:0058-Dist In Commu PEC - PECInt3
+$
+#59
+SLG2:0059-PECInt1 internal PS fail
+$
+#60
+SLG2:0060-PECInt2 internal PS fail
+$
+#61
+SLG2:0061-PECInt3 internal PS fail
+$
+#62
+SLG2:0062-PECInt1 Hardware fail
+$
+#63
+SLG2:0063-PECInt2 Hardware fail
+$
+#64
+SLG2:0064-PECInt3 Hardware fail
+$
+#65
+SLG2:0065-Dist.In PEC PS G506
+$
+#66
+SLG2:0066-Dist.In PEC PS G507 
+$
+#67
+SLG2:0067-Dist.In PECInt1 PS G505 
+$
+#68
+SLG2:0068-Dist.In PECInt2 PS G504 
+$
+#69
+SLG2:0069-Dist.In PECInt3 PS G503 
+$
+#70
+SLG2:0070-Dist.In GDPS G501 
+$
+#71
+SLG2:0071-Dist.In GDPS G502
+$
+#72
+SLG2:0072-PECInt1 DC Link meas fail
+$
+#73
+SLG2:0073-PECInt2 DC Link meas fail
+$
+#74
+SLG2:0074-PECInt3 DC Link meas fail
+$
+#75
+SLG2:0075-LC1 over current
+$
+#76
+SLG2:0076-LC1- Boggie-2 Isolated
+$
+#77
+SLG2:0077-LC1 - U Phase GD Card fail
+$
+#78
+SLG2:0078-LC1 - V Phase GD Card fail
+$
+#79
+SLG2:0079-LC1 - U Phase IGBT Fail
+$
+#80
+SLG2:0080-LC1 - V Phase IGBT Fail
+$
+#81
+SLG2:0081-LC1 - U Phase IGBT Vce sat
+$
+#82
+SLG2:0082-LC1 - V Phase IGBT Vce sat
+$
+#83
+SLG2:0083-Dist commu PECInt1 - LC1U GD
+$
+#84
+SLG2:0084-Dist commu PECInt1 - LC1V GD
+$
+#85
+SLG2:0085-LC1-U1 current  sensor fail
+$
+#86
+SLG2:0086-LC1-V1 current  sensor fail
+$
+#87
+SLG2:0087-LC1-U2 current  sensor fail
+$
+#88
+SLG2:0088-LC1-V2 current  sensor fail
+$
+#89
+SLG2:0089-LC2 over current
+$
+#90
+SLG2:0090-LC2- Boggie-2 Isolated
+$
+#91
+SLG2:0091-LC2 - U Phase GD Card fail
+$
+#92
+SLG2:0092-LC2 - V Phase GD Card fail
+$
+#93
+SLG2:0093-LC2 - U Phase IGBT Fail
+$
+#94
+SLG2:0094-LC2 - V Phase IGBT Fail
+$
+#95
+SLG2:0095-LC2-U Phase IGBT Vce sat
+$
+#96
+SLG2:0096-LC2-V Phase IGBT Vce sat
+$
+#97
+SLG2:0097-Dist commu PECInt2 - LC2U GD
+$
+#98
+SLG2:0098-Dist commu PECInt2 - LC2V GD
+$
+#99
+SLG2:0099-LC2-U1 current  sensor fail
+$
+#100
+SLG2:0100-LC2-V1 current  sensor fail
+$
+#101
+SLG2:0101-LC2-U2 current  sensor fail
+$
+#102
+SLG2:00102-LC2-V2 current  sensor fail
+$
+#103
+SLG2:0103-MC1 over current
+$
+#104
+SLG2:0104-Motor-1 temp > Limit
+$
+#105
+SLG2:0105-Dist.temp sensor motor-1
+$
+#106
+SLG2:0106-Motor-1 Speed>Maximum
+$
+#107
+SLG2:0107-Dist.In speed sensor Motor-1
+$
+#108
+SLG2:0108-MC1 GD card Failure
+$
+#109
+SLG2:0109-MC1 IGBT Failure
+$
+#110
+SLG2:0110-MC1 IGBT Vce sat
+$
+#111
+SLG2:0111-Dist commu PECInt1 - MC1 GD
+$
+#112
+SLG2:0112-MC1-U current  sensor fail
+$
+#113
+SLG2:0113-MC1-W current  sensor fail
+$
+#114
+SLG2:0114-MC2 over current
+$
+#115
+SLG2:0115-Motor-2 temp > Limit
+$
+#116
+SLG2:0116-Dist.temp sensor motor-2
+$
+#117
+SLG2:0117-Motor-2 Speed>Maximum
+$
+#118
+SLG2:0118-Dist.In speed sensor Motor-2
+$
+#119
+SLG2:0119-MC2 GD card Fail
+$
+#120
+SLG2:0120-MC2 IGBT Fail
+$
+#121
+SLG2:0121-MC2 IGBT Vce sat
+$
+#122
+SLG2:0122-Dist commu PEC Int2 - MC2 GD
+$
+#123
+SLG2:0123-MC2-U current  sensor fail
+$
+#124
+SLG2:0124-MC2-W current  sensor fail
+$
+#125
+SLG2:0125-MC3 over current
+$
+#126
+SLG2:0126-Motor-3 temp > Limit
+$
+#127
+SLG2:0127-Dist.temp sensor motor-3
+$
+#128
+SLG2:0128-Motor-3 Speed>Maximum
+$
+#129
+SLG2:0129-Dist.In speed sensor Motor-3
+$
+#130
+SLG2:0130-MC3 GD card Fail
+$
+#131
+SLG2:0131-MC3 IGBT Fail
+$
+#132
+SLG2:0132-MC3 IGBT Vce sat
+$
+#133
+SLG2:0133-Dist commu PECInt3 - MC3 GD
+$
+#134
+SLG2:0134-MC3-U current  sensor fail
+$
+#135
+SLG2:0135-MC3-W current  sensor fail
+$
+#136
+SLG2:0136-TM1 Boggie-2 Isolated
+$
+#137
+SLG2:0137-TM2 Boggie-2 Isolated
+$
+#138
+SLG2:0138-TM3 Boggie-2 Isolated
+$
+#139
+SLG2:0139-Warning: Loco is creeping
+$
+#140
+SLG2:0140-Bogie 2 wheel skidding
+$
+

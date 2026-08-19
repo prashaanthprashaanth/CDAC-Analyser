@@ -1,0 +1,46 @@
+/*---------------------------------------------------------------------------
+ *	File Name		: Device_list.txt
+ *	Version Number		: V2.3
+ *	Project Code		: PEG084D
+ *	Project Name / Mnemonic	: VCU & TCN for Rolling Stock Application
+ *	Product Name		: VCU
+ *	Module Name		: VCU_TCN_Tool
+ *	Description of the contents of the file
+ *				: Processor details
+ *	Author			: Sreedevi M.L.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *--------------------------------------------------------------------------------------------
+ */
+/*
+ * v 2.0 - Version initialisation (02-06-2018)
+ * v 2.1 - Header added. Code modified accordingly (04-06-2018)
+ * v 2.2 - Address corresponding to adm2 changed from 22 to 24. Renamed devices of 24 and 4f
+ * v 2.3 - ApplicationVersion update added for New Scheme of Errorlog
+ */
+/*********************************************************************************************/
+$$$Device_List
+1a-STB1 STB1 04 00
+1c-HBB1 HBB1 09 00
+1e-DDA1 DDA1 00 00
+14-FLG1 FLGx 13 01
+20-FLG2 FLGx 13 01
+26-STB2 STB2 04 00
+28-HBB2 HBB2 10 00
+2a-DDA2 DDA2 00 00
+3c-SLG1 SLG1 16 10
+46-SLG2 SLG2 16 10
+d0-BUR1 BUR1 02 05
+d2-BUR2 BUR2 03 08
+d4-BUR3 BUR3 03 08
+40-ASC1 ASC1 00 00
+4a-ASC2 ASC2 00 00
+3e-NSC1 NSC1 00 00
+48-NSC2 NSC2 00 00
+16-ADM1 ADM1 00 00	
+24-ADM2_DIA_CAB2_PIXY_DRV ADM2 00 00
+01-MNGR MNGR 00 00
+4f-CAB1_PIXY_DRV CAB1_DISPLAY 00 00
+/*********************************************************************************************/
+$$$ApplicationVersion
+v2.25

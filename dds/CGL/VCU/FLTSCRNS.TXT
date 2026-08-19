@@ -1,0 +1,883 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: FLTSCRNS.TXT
+ *	Version Number			: V2.1
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Fault screen for popup messages in ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ * v2.1(22.06.2018)
+ * Edited for dynamically handling the loco number
+ *---------------------------------------------------------------------------
+ */
+#1
+Information 001
+SELF HOLD MODE ACTIVE
+After 10 min MCE will switch off
+
+$
+#2
+Information 002
+MORE THAN ONE CAB ACTIVE
+Deactivate non driving cab
+Otherwise after 10 min MCE switches off
+$
+#3
+Information 003
+TRACTION MAY NOT BE AVAILABLE
+ON THIS LOCO OR ON THE SLAVE LOCO
+Bring throttle to 0 pos. then set again
+$
+#4
+Information 004
+TRAINBUS CONFIGURATION RUNNING
+Please wait ...
+
+$
+#5
+Information 005
+FULL TE/BE RESTORED
+
+
+$
+#6
+Information 006
+PANTO RAISING
+Please wait ...
+
+$
+#00100
+   SS01:Main power
+MAIN POWER ISOLATED; VCB inhibited
+Loco is dead
+Press <enter>             F0100P0
+$
+#10101
+ SS01:Main power
+VCB STUCK IN ON POSITION
+Loco will be shutdown
+				F0101P1
+$
+#10102
+ SS01:Main power
+VCB STUCK IN OFF POSITION
+Try to close the VCB again
+				F0102P1
+$
+#10103
+ SS01:Main power
+LOW PRESSURE PANTO/FAULTY PANTO
+Check iso.cock, aux reservoir pressure
+						F0103P1
+$
+#10104
+ SS01:Main Power
+CATENARY VOLTAGE OUT OF LIMITS
+Watch catenary voltmeter
+Close VCB when voltage is OK F0104P1
+$
+#10105
+ SS01:Main power
+TRANSFORMER OIL TEMP. OR PRESSURE NOT OK
+TE/BE reduction or VCB trips
+Try to close the VCB if open    F0105P1
+$
+#10106
+ SS01:Main power
+FILTER ON/OFF CONTACTOR STUCK ON
+VCB will not close again
+					F0106P1
+$
+#10107
+ SS01:Main power
+PRECHARGE OR MAIN CONTACTOR STUCK ON
+Main converters blocked
+					  F0107P1
+$
+#10108
+ SS01:Main power
+PRIMARY OVERCURRENT
+Check overcurrent relay flag
+Try to close the VCB again F0108P1
+$
+#10109
+ SS01:Main power
+AUXILIARY WINDING OVERCURRENT
+Try to close the VCB again
+				 F0109P1
+$
+#10110
+ SS01:Main power
+FATAL ERROR IN MAIN CIRCUIT
+Turn off the Loco
+				 F0110P1
+$
+#20101
+ SS01:Main power
+OVERTEMPERATURE CONTROL ELECTRONIC
+To be checked during maitenance
+					 F0101P2
+$
+#20102
+ SS01:Main power
+TRANSFORMER OIL PRESSURE NOT OK
+Any oil pump circuit not working
+TE/BE will be reduced   F0102P2
+$
+#20103
+ SS01:Main power
+EARTH FAULT AUX.WINDING CIRCUIT
+Normal operation can continue
+To be checked during maintenance F0103P2
+$
+#20104
+ SS01:Main power
+LOW FREQUENCY CATENARY VOLTAGE
+Wait 1 minute and set TE/BE again
+					F0104P2
+$
+#20105
+ SS01:Main power
+HIGH FREQUENCY CATENARY VOLTAGE
+Wait 1 minute and set TE/BE again
+					F0105P2
+$
+#20106
+ SS01:Main power
+AUX. CAPACITOR MACH.RM. BLOW.MOT. NOT OFF
+Normal operation can continue
+To be checked during maintenance  F0106P2
+$
+#20107
+ SS01:Main power
+DEMANDED SPEED CAN NOT BE ACHIEVED
+Request a banking locomotive immediately
+						  F0107P2
+$
+#00200
+ SS02:Traction bogie 1
+BOGIE 1 ISOLATED; Only half traction
+And brake power available
+Press <enter>			   F0200P0
+$
+#10201
+ SS02:Traction bogie 1
+DISTURBANCE IN CONVERTER 1
+Try to close the VCB again
+					 F0201P1
+$
+#10202
+ SS02:Traction bogie 1
+CONVERTER CONTACTOR STUCK OFF
+Try to close the VCB again
+					 F0202P1
+$
+#10203
+ SS02:Traction bogie 1
+GATE UNIT SUPPLY STUCK OFF
+Try to close the VCB again
+					 F0203P1
+$
+#10205
+ SS02:Traction bogie 1
+CONVERTER 1 OIL TEMPERATURE TOO HIGH
+Try to close the VCB again
+					   F0205P1
+$
+#10206
+ SS02:Traction bogie 1
+CONVERTER 1 OIL PRESSURE NOT OK
+Check oil level
+Try to close the VCB again F0206P1
+$
+#10207
+ SS02:Traction bogie 1
+TRACTION MOTOR TEMPERATURE TOO HIGH
+Converter 1 blocked
+Bogie 1 may get isolated   F0207P1
+$
+#20201
+ SS02:Traction bogie 1
+EARTH FAULT IN CONVERTER 1
+Normal operation can continue
+To be checked during maintenance F0201P2
+$
+#20202
+ SS02:Traction bogie 1
+TRACTION MOTOR OVERSPEED
+TE is being reduced
+Reduce loco speed         F0202P2
+$
+#20203
+ SS02:Traction bogie 1
+MUB RESISTANCE TOO HOT IN CONVERTER 1
+Wait for 30 seconds
+					    F0203P2
+$
+#20204
+ SS02:Traction bogie 1
+FAULTY MOTOR TEMPERATURE SENSORS
+Normal operation can continue
+To be checked during maintenance F0204P2
+$
+#20205
+ SS02:Traction bogie 1
+EQUIPMENT TEMPERATURE HIGH
+TE/BE is being reduced
+					 F0205P2
+$
+#20206
+ SS02:Traction bogie 1
+DC LINK CAPACITORS PRESSURE NOT OK
+Normal operation can continue
+To be checked during maintenance F0206P2
+$
+#20207
+ SS02:Traction bogie 1
+WHEEL SKIDDING AT BOGIE 1
+Normal operation can continue
+Reduce braking effort     F0207P2
+$
+#00300
+ SS03:Traction bogie 2
+BOGIE 2 ISOLATED; Only half traction
+and braking power available
+Press <enter>	       	   F0300P0
+$
+#10301
+ SS03:Traction bogie 2
+DISTURBANCE IN CONVERTER 2
+Try to close the VCB again
+					 F0301P1
+$
+#10302
+ SS03:Traction bogie 2
+CONVERTER CONTACTOR STUCK OFF
+Try to close the VCB again
+					 F0302P1
+$
+#10303
+ SS03:Traction bogie 2
+GATE UNIT SUPPLY STUCK OFF
+Try to close the VCB again
+					 F0303P1
+$
+#10305
+ SS03:Traction bogie 2
+CONVERTER 2 OIL TEMPERATURE TOO HIGH
+Try to close the VCB again
+					   F0305P1
+$
+#10306
+ SS03:Traction bogie 2
+CONVERTER 2 OIL PRESSURE NOT OK
+Check oil level
+Try to close VCB again    F0306P1
+$
+#10307
+ SS03:Traction bogie 2
+TRACTION MOTOR TEMPERATURE TOO HIGH
+Converter 2 blocked
+Bogie 2 may get isolated   F0307P1
+$
+#20301
+ SS03:Traction bogie 2
+EARTH FAULT IN CONVERTER 2
+Normal operation can continue
+To be checked during maintenance F0301P2
+$
+#20302
+ SS03:Traction bogie 2
+TRACTION MOTOR OVERSPEED
+TE is being reduced
+Reduce loco speed 		 F0302P2
+$
+#20303
+ SS03:Traction bogie 2
+MUB RESISTANCE TOO HOT IN CONVERTER 2
+Wait for 30 seconds
+					    F0303P2
+$
+#20304
+ SS03:Traction bogie 2
+FAULTY MOTOR TEMPERATURE SENSORS
+Normal operation can continue
+To be checked during maintenance F0304P2
+$
+#20305
+ SS03:Traction bogie 2
+EQUIPMENT TEMPERATURE HIGH
+TE/BE is being reduced
+					 F0305P2
+$
+#20306
+ SS03:Traction bogie 2
+DC LINK CAPACITORS PRESSURE NOT OK
+Normal operation can continue
+To be checked during maintenance F0306P2
+$
+#20307
+ SS03:Traction bogie 2
+WHEEL SKIDDING BOGIE 2
+Normal operation can continue
+Reduce braking effort     F0307P2
+$
+#00400
+ SS04:Harmonic filter
+HARMONIC FILTER ISOLATED
+Speak to TLC
+Press <enter>            F0400P0
+$
+#10401
+ SS04:Harmonic filter
+HARMONIC FILTER CURRENT TOO HIGH
+Try to close the VCB again
+					F0401P1
+$
+#10402
+ SS04:Harmonic filter
+HARM. FILTER CONTACTOR(S) STUCK OFF/ON
+Harmonic filter will be isolated
+Speak to TLC                  F0402P1
+$
+#10404
+ SS04:Harmonic filter
+FILTER DISCHARGE RESISTOR TOO HOT
+No. of filter discharges exceeded
+VCB will remain inhibited 15 min F0404P1
+$
+#20401
+ SS04:Harmonic filter
+FILTER CONTACTOR 8.1 STUCK ON
+If VCB opens it will not close again
+			        F0401P2
+$
+#20402
+ SS04:Harmonic filter
+EARTH FAULT HARMONIC FILTER CIRCUIT
+Normal operation can continue
+To be checked during maintenance F0402P2
+$
+#20403
+ SS04:Traction bogie1
+Motor1-Bogie1 Isolated                    
+Reduced Traction/Braking
+                 
+                            F0403P2
+$ 
+#20404
+ SS04:Traction bogie1
+Motor2-Bogie1 Isolated                    
+Reduced Traction/Braking
+                 
+                            F0404P2
+$ 
+#20405
+ SS04:Traction bogie1
+Motor3-Bogie1 Isolated                    
+Reduced Traction/Braking
+                 
+                            F0405P2
+$
+#20406 
+  SS04:Traction bogie1
+Line Converter1-Bogie1 Isolated
+Reduced Traction/Braking
+                           F0406P2
+$
+#20407 
+  SS04:Traction bogie1
+Line Converter2-Bogie1 Isolated
+Reduced Traction/Braking
+                           F0407P2
+$
+#00500
+ SS05:Hotel load
+HOTEL LOAD ISOLATED
+Driving still possible
+Press <enter>       F0500P0
+$
+#10503
+ SS05:Hotel load
+EARTH FAULT IN HOTEL LOAD CIRCUIT
+Hotel load will be isolated
+					F0503P1
+$
+#10504
+ SS05:Hotel load
+OVERCURRENT IN HOTEL LOAD CIRCUIT
+Try to close the VCB again
+					F0504P1
+$
+#20501
+ SS05:Hotel load
+HOTEL LOAD CONTACTOR STUCK OFF
+Hotel load not available
+				  F0501P2
+$
+#20502
+ SS05:Hotel load
+HOTEL LOAD CONTACTOR STUCK ON
+For un/coupling hotel load trip VCB
+					  F0502P2
+$
+#20503
+ SS05:Traction bogie2
+Motor1-Bogie2 Isolated                    
+Reduced Traction/Braking
+                 
+                            F0503P2
+$ 
+#20504
+ SS05:Traction bogie2
+Motor2-Bogie2 Isolated                    
+Reduced Traction/Braking
+                 
+                            F0504P2
+$
+#20505
+ SS05:Traction bogie2
+Motor3-Bogie2 Isolated                    
+Reduced Traction/Braking
+                 
+                            F0505P2
+$
+#20506 
+  SS04:Traction bogie2
+Line Converter1-Bogie2 Isolated
+Reduced Traction/Braking
+                           F0406P2
+$
+#20507 
+  SS04:Traction bogie2
+Line Converter2-Bogie2 Isolated
+Reduced Traction/Braking
+                           F0407P2
+$    
+#00600
+ SS06:Aux. converter 1
+AUXILIARY CONVERTER 1 ISOLATED
+Driving still possible
+Press <enter>             F0600P0
+$
+#10601
+ SS06:Aux. converter 1
+DISTURBANCE IN PROCESSOR BUR1
+Try to close the VCB again
+					 F0601P1
+$
+#10602
+ SS06:Aux. converter 1
+FAULT IN AUXILIARY CONVERTER 1
+Try to close the VCB again
+					 F0602P1
+$
+#10603
+ SS06:Aux. converter 1
+CONTACTOR FAULT IN HB1
+Contactor 52/4 or 52/5 stuck off
+					 F0603P1
+$
+#10604
+ SS06:Aux. converter 1
+BOGIE 1 VENTILATION BUR1 DISTURBED
+Press acknowledge to reconfigure to BUR2
+						  F0604P1
+$
+#00700
+ SS07:Aux. converter 2
+AUXILIARY CONVERTER 2 ISOLATED
+Driving still possible
+Press <enter>             F0700P0
+$
+#10701
+ SS07:Aux. converter 2
+DISTURBANCE IN PROCESSOR BUR2
+Try to close the VCB again
+					 F0701P1
+$
+#10702
+ SS07:Aux. converter 2
+FAULT IN AUXILIARY CONVERTER 2
+Try to close the VCB again
+					 F0702P1
+$
+#10703
+ SS07:Aux. converter 2
+CONTACTOR FAULT IN AUX.CONV. BOX2 / HB1
+Contactor 52/1/2/4 stuck off or on
+						 F0703P1
+$
+#10704
+ SS07:Aux. converter 2
+BOGIE 2 VENTILATION BUR2 DISTRUBED
+Pres acknowledge to reconfigure to BUR 1
+						  F0704P1
+$
+#00800
+ SS08:Aux. converter 3
+AUXILIARY CONVERTER 3 ISOLATED
+Driving still possible
+Press <enter>             F0800P0
+$
+#10801
+ SS08:Aux. converter 3
+DISTURBANCE IN PROCESSOR BUR3
+Try to close the VCB again
+					 F0801P1
+$
+#10802
+ SS08:Aux. converter 3
+FAULT IN AUXILIARY CONVERTER 3
+Try to close the VCB again
+					 F0802P1
+$
+#10803
+ SS08:Aux. converter 3
+CONTACTOR FAULT IN AUX.CONVERTER BOX 2
+Contactor 52/3 stuck off
+						F0803P1
+$
+#10901
+ SS09:Battery system
+BATTERY VOLTAGE TOO LOW
+Electronics will switch off
+				    F0901P1
+$
+#10902
+ SS09:Battery system
+LOW BATTERY VOLTAGE
+Converters being switched off
+Open VCB,lower PANTO    F0902P1
+$
+#10903
+ SS09:Battery system
+PAN LOWERED LONGER THAN 10 MINUTES
+Control electronics will switch off
+					  F0903P1
+$
+#20901
+ SS09:Battery system
+WARNING: LOW BATTERY VOLTAGE
+Driving available for less than 30 min
+Check battery charger MCB     F0901P2
+$
+#20902
+ SS09:Battery system
+BATTERY CHARGER MCB OFF
+Try to reclose the MCB
+				    F0902P2
+$
+#20903
+ SS09:Battery system
+LOW BATTERY CHARGER CURRENT
+Battery charger MCB may have tripped
+Battery not being charged   F0903P2
+$
+#20904
+ SS09:Battery system
+DIAGNOSIS MEMORY BATTERY EMPTY
+Inform TLC during next stop
+					   F0904P2
+$
+#20905
+ SS09:Battery system
+EARTH FAULT BATTERY CIRCUIT
+Normal operation can continue
+To be ckecked during maintenance F0905P2
+$
+#11001
+ SS10:Brake system
+FAULT IN BRAKE ELECTRONICS
+Emergency brake applied
+No Traction allowed   F1001P1
+$
+#11002
+ SS10:Brake system
+LOW PRESSURE MAIN RESERVOIR
+No traction allowed till pressure
+reaches 6.4 kg/cm2        F1002P1
+$
+#11003
+ SS10:Brake system
+VIGILANCE EMERGENCY BRAKE APPLICATION
+Bring TE/BE throttle to zero
+Press vigilance reset pushbutton F1003P1
+$
+#11004
+ SS10:Brake system
+WRONG CONFIGURATION BRAKE SYSTEM
+Check isolating cock brake control
+Wrong cock pos.to reset open VCB F1004P1
+$
+#11005
+ SS10:Brake system
+TRACTION WITH AUTO BRAKES NOT ALLOWED
+Release auto air brake
+Bring TE/BE throttle to zero  F1005P1
+$
+#11006
+ SS10:Brake system
+TRACTION WITH PARKING BRAKES NOT ALLOWED
+Release parking brakes
+Bring TE/BE throttle to zero     F1006P1
+$
+#11007
+ SS10:Brake system
+REGENERATIVE BRAKE FAILURE
+Pneumatic loco brake applied
+				   F1007P1
+$
+#11008
+ SS10:Brake system
+EMERGENCY STOP; SHUTDOWN ON THE LOCO
+To release, reset Emg.stop pushbutton
+Bring TE/BE throttle to zero  F1008P1
+$
+#11009
+ SS10:Brake system
+TRACTION NOT ALLOWED WITH APPLIED BRAKES
+Release loco brakes
+Bring TE/BE throttle to zero     F1009P1
+$
+#11010
+ SS10:Brake system
+EMG EXHAUST COCK CLOSED, NO TRACTION
+For traction open the cock
+Bring TE/BE throttle to zero F1010P1
+$
+#21001
+ SS10:Brake system
+LOCO IS IN BANKING MODE
+Loco brake controller isolated
+Emergency brakes can be applied F1001P2
+$
+#21002
+ SS10:Brake system
+ALARM CHAIN PULLING
+Check the coaches
+				   F1002P2
+$
+#21101
+ SS11:Auxiliaries HB1
+MCB(S) OPEN IN AUX. CUBICLE 1
+Traction power may get reduced,
+if temperatures exceed    F1101P2
+$
+#21102
+ SS11:Auxiliaries HB1
+EARTH FAULT 415/110V CIRCUIT
+Normal operation can continue
+To be checked during maintenance F1102P2
+$
+#21103
+ SS11:Auxiliaries HB1
+MCB OF MAIN COMPRESSOR 1 OPEN
+Compressor 1 not available
+					 F1103P2
+$
+#21104
+ SS11:Auxiliaries HB1
+OVERLOAD ON OIL COOLER BLOWER 1
+Inform service staff to clean radiators
+						  F1104P2
+$
+#21105
+ SS11: Vigilance Cut out
+Rotary switch vigilance OFF
+Check ON/OFF position
+Normal operation can continue F1105P2
+$
+#21201
+ SS12:Auxiliaries HB2
+MCB(S) OPEN IN AUX. CUBICLE 2
+Traction power may get reduced,
+if temperatures exceed    F1201P2
+$
+#21202
+ SS12:Auxiliaries HB2
+MCB OF MAIN COMPRESSOR 2 OPEN
+Compressor 2 not available
+					 F1202P2
+$
+#21203
+ SS12:Auxiliaries HB2
+OVERLOAD ON OIL COOLER BLOWER 2
+Inform service staff to clean radiators
+						  F1203P2
+$
+#01300
+ SS13:Cab 1
+CAB 1 ISOLATED
+Drive from cab 2
+Press <enter>   F1300P0
+$
+#11301
+ SS13:Cab 1
+DISTURBANCE IN PROCESSOR HBB1
+Cab 1 may get isolated; Drive from Cab 2
+REFER TO DRIVER'S MANUAL      F1301P1
+$
+#11302
+ SS13:Cab 1
+DISTURBANCE IN PROCESSOR STB1
+Cab 1 may get isolated; Drive from Cab 2
+REFER TO DRIVER'S MANUAL      F1302P1
+$
+#11303
+ SS13:Cab 1
+REVERSER DEFECTIVE
+Drive from Cab 2
+			 F1303P1
+$
+#01400
+ SS14:Cab 2
+CAB 2 ISOLATED
+Drive from cab 1
+Press <enter>   F1400P0
+$
+#11401
+ SS14:Cab 2
+DISTURBANCE IN PROCESSOR HBB2
+Cab 2 may get isolated; Drive from Cab 1
+REFER TO DRIVER'S MANUAL       F1401P1
+$
+#11402
+ SS14:Cab 2
+DISTURBANCE IN PROCESSOR STB2
+Cab 2 may get isolated; Drive from Cab 1
+REFER TO DRIVER'S MANUAL       F1402P1
+$
+#11403
+ SS14:Cab 2
+REVERSER DEFECTIVE
+Drive from Cab 1
+			 F1403P1
+$
+#11501
+ SS15:Fire detection
+FIRE IN MACHINE ROOM
+Extinguish the fire
+Reset the fire detection unit F1501P1
+$
+#21501
+ SS15:Fire detection
+FAULT IN FIRE DETECTION UNIT
+No fire detection possible
+Normal operation can continue F1501P2
+$
+#21502
+ SS15:Fire detection
+WARNING: SMOKE IN MACHINE ROOM
+Inspect machine room
+				    F1502P2
+$
+#11601
+ SS16:Speedometer
+SPEED LIMIT EXCEEDED
+Emergency brakes applied
+Bring TE/BE throttle to zero F1601P1
+$
+#21601
+ SS16:Speedometer
+FAULT IN SPEEDOMETER
+No display of speed in the cab
+Drive carfully, use diagn.screen F1601P2
+$
+#01700
+ SS17:Processor FLG1
+FLG1 ISOLATED
+Refer to drivers manual
+Press <enter>          F1700P0
+$
+#11701
+ SS17:Processor FLG1
+DISTURBANCE IN PROCESSOR FLG1
+FLG1 will be isolated
+				   F1701P1
+$
+#11702
+ SS17:Processor FLG1
+SOFTWARE MISMATCH WAP-5/WAG-9
+Panto will not raise
+				   F1702P1
+$
+#11703
+ SS17:Processor FLG1
+FAULT IN ANGLE TRANSMITTER OF THROTTLE
+Bring TE/BE throttle to zero
+Operate switch failure mode   F1703P1
+$
+#11704
+ SS17:Processor FLG1
+SIMULATION SWITCH POSITION NOT MATCHING
+Check simulation key on master/slave
+						F1704P1
+$
+#21701
+ SS17:Processor FLG1
+DISTURBANCE IN PROCESSOR DIA1
+DIA1 will be isolated
+No Fault data will be stored F1701P2
+$
+#01800
+ SS18:Processor FLG2
+FLG2 ISOLATED
+Refer to drivers manual
+Press <enter>          F1800P0
+$
+#11801
+ SS18:Processor FLG2
+DISTURBANCE IN PROCESSOR FLG2
+FLG2 will be isolated
+				   F1801P1
+$
+#11802
+ SS18:Processor FLG2
+SOFTWARE MISMATCH WAP-5/WAG-9
+Panto will not raise
+				   F1802P1
+$
+#11803
+ SS18:Processor FLG2
+FAULT IN ANGLE TRANSMITTER OF THROTTLE
+Bring TE/BE throttle to zero
+Operate switch failure mode   F1803P1
+$
+#11804
+ SS18:Processor FLG2
+SIMULATION SWITCH POSITION NOT MATCHING
+Check simulation key on master/slave
+						F1804P1
+$
+#21801
+ SS18:Processor FLG2
+DISTURBANCE IN PROCESSOR DIA1
+DIA1 will be isolated
+No Fault data will be stored F1801P2
+$
+#01900
+ SS19:Trainbus
+TRAINBUS ISOLATED
+Multiple operation not possible
+Press <enter>         F1900P0
+$
+#11901
+ SS19:Trainbus
+COMMUNICATION DISTURBANCE
+Try to close the VCB again
+Multiple operation not possible F1901P1
+$
+#21106
+ SS11:Rotary switch 160
+Loco in Shunting Mode
+SPEED CANNOT BE MORE THAN 15 KMPH
+                            F1106P2
+$

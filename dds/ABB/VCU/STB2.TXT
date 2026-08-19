@@ -1,0 +1,56 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: STB2.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of STB2 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *---------------------------------------------------------------------------
+ */
+#1
+STB2:0001-Lifesign from FLG missing
+$
+#2
+STB2:0002-No pressure in pan 2
+$
+#3
+STB2:0003-Speedometer failed
+$
+#4
+STB2:0004-Earth fault auxiliary circuit
+$
+#5
+STB2:0005-Fire alarm 1 detected
+$
+#6
+STB2:0006-Fire detect. equipment failed
+$
+#7
+STB2:0007-Oil cooler blower MCB open
+$
+#8
+STB2:0008-MR blower MCB open
+$
+#9
+STB2:0009-TM 2 blower MCB open
+$
+#10
+STB2:0010-MR scav. blower MCB open
+$
+#11
+STB2:0011-Converter 2 pump MCB open
+$
+#12
+STB2:0012-Transformer pump 2 MCB open
+$
+#13
+STB2:0013-Scav. oil cooler MCB open
+$

@@ -1,0 +1,57 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: STB1.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of STB1 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *---------------------------------------------------------------------------
+ */
+#1
+STB1:0001-Lifesign from FLG missing
+$
+#2
+STB1:0002-Primary current above maximum
+$
+#3
+STB1:0003-VCB will not close
+$
+#4
+STB1:0004-VCB will not open
+$
+#5
+STB1:0005-Hotel load cont. is stuck off
+$
+#6
+STB1:0006-Hotel load cont. is stuck on
+$
+#7
+STB1:0007-MCE temperature above 70'C
+$
+#8
+STB1:0008-MCB of compressor 1 open
+$
+#9
+STB1:0009-Rotary switch bogie 1 cut out
+$
+#10
+STB1:0010-Rotary switch bogie 2 cut out
+$
+#11
+STB1:0011-Rotary switch bogie 1&2 cut out
+$
+#12
+STB1:0012-Rotary switch Vig: cut off
+$
+#13
+STB1:0013-BPCS is Stuck ON
+$
+

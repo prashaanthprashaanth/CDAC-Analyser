@@ -1,0 +1,66 @@
+{
+  "name": "cdac-vcu-fault-analyser",
+  "version": "2.0.0",
+  "description": "Standalone ABB and CGL VCU fault and environment data analyser",
+  "main": "electron-main.js",
+  "author": "ELS/ED",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test:html-export": "electron export-test.js",
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "43.4.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "in.railways.elsed.cdacvcufaultanalyser",
+    "productName": "CDAC VCU Fault Analyser",
+    "asar": true,
+    "compression": "maximum",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron-main.js",
+      "package.json",
+      "build/icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "../vcu_fault_viewer",
+        "to": "viewer",
+        "filter": [
+          "**/*",
+          "!.vendor-staging/**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png",
+      "artifactName": "CDAC-VCU-Fault-Analyser-Setup-${version}.${ext}",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "CDAC VCU Fault Analyser",
+      "uninstallDisplayName": "CDAC VCU Fault Analyser",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}

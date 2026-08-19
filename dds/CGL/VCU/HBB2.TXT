@@ -1,0 +1,35 @@
+/*---------------------------------------------------------------------------
+ *	File Name			: HBB2.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of HBB2 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *---------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *---------------------------------------------------------------------------
+ */
+#1
+HBB2:0001-Lifesign from FLG missing
+$
+#2
+HBB2:0002-No pressure in pan 1
+$
+#3
+HBB2:0003-Loco in banking operation
+$
+#4
+HBB2:0004-Fire alarm 2 detected
+$
+#5
+HBB2:0005-MCB of compressor 2 open
+$
+#18
+HBB2:0018-Capacitor MR-blower not off
+$

@@ -1,0 +1,8 @@
+vcu_desktop/node_modules/
+vcu_desktop/dist/
+vcu_fault_viewer/.vendor-staging/
+*.log
+*.blockmap
+.DS_Store
+Thumbs.db
+

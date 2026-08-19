@@ -1,0 +1,173 @@
+/*-------------------------------------------------------------------------------------
+ *	File Name			: NSC1.TXT
+ *	Version Number			: V2.0
+ *	Project Code			: PEG084D
+ *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
+ *	Product Name			: VCU
+ *	Module Name			: PIXYDisplay
+ *	Description of the contents of 
+				the file:Message database of NSC1 for ABB loco
+ *	Author				: Ajeesh A.
+ *	Revision History & Date of modifications:
+ *	Modified by whom and Reasons for modifications:
+ *------------------------------------------------------------------------------------
+ * v2.0(23.01.2018)
+ * Version changed, but no changes in file
+ *------------------------------------------------------------------------------------
+ */
+#1
+NSC1:0001-Triggering unit check failed
+$
+#2
+NSC1:0002-Wrong numb. of triggering uni
+$
+#3
+NSC1:0003-ADC not ready
+$
+#4
+NSC1:0004-ADC time out
+$
+#5
+NSC1:0005-MicOS disturbance
+$
+#6
+NSC1:0006-Error software
+$
+#7
+NSC1:0007-Fiber optics interf. powerfai
+$
+#8
+NSC1:0008-Error MVB
+$
+#9
+NSC1:0009-ZK not discharged
+$
+#10
+NSC1:0010-Error PS hardware
+$
+#11
+NSC1:0011-PS fault storage CGP
+$
+#12
+NSC1:0012-PS fault storage GBC
+$
+#13
+NSC1:0013-PS fault storage MC-Peri
+$
+#14
+NSC1:0014-Error CTR synchronization
+$
+#15
+NSC1:0015-Error calibration test
+$
+#16
+NSC1:0016-Error comparator test
+$
+#17
+NSC1:0017-Error transducer test
+$
+#18
+NSC1:0018-Error 100Hz-test
+$
+#19
+NSC1:0019-Error FSP Direct test
+$
+#20
+NSC1:0020-Error GUSP test
+$
+#31
+NSC1:0031-Error plausibility Ud
+$
+#32
+NSC1:0032-Error plausibility Iq1
+$
+#33
+NSC1:0033-Error plausibility Iq2
+$
+#34
+NSC1:0034-Error plausibility Iq3
+$
+#35
+NSC1:0035-Error reference voltage
+$
+#36
+NSC1:0036-Error operating software
+$
+#37
+NSC1:0037-Error shifted pulsing
+$
+#38
+NSC1:0038-Error synchronization
+$
+#39
+NSC1:0039-Error set current limit
+$
+#40
+NSC1:0040-Error I controller limitation
+$
+#41
+NSC1:0041-Error actuator voltage limit.
+$
+#42
+NSC1:0042-Error plaus. DSP measure lim.
+$
+#71
+NSC1:0071-Triggering unit check failed
+$
+#72
+NSC1:0072-Wrong numb. of triggering uni
+$
+#73
+NSC1:0073-ADC not ready
+$
+#74
+NSC1:0074-ADC time out
+$
+#75
+NSC1:0075-MicOS disturbance
+$
+#76
+NSC1:0076-Error software
+$
+#77
+NSC1:0077-Fiber optics interf. powerfai
+$
+#78
+NSC1:0078-Error MVB
+$
+#79
+NSC1:0079-ZK not discharged
+$
+#80
+NSC1:0080-Error PS hardware
+$
+#81
+NSC1:0081-PS fault storage CGP
+$
+#82
+NSC1:0082-PS fault storage GBC
+$
+#83
+NSC1:0083-PS fault storage MC-Peri
+$
+#84
+NSC1:0084-Error CTR synchronization
+$
+#85
+NSC1:0085-Error calibration test
+$
+#86
+NSC1:0086-Error comparator test
+$
+#87
+NSC1:0087-Error transducer test
+$
+#88
+NSC1:0088-Error 100Hz-test
+$
+#89
+NSC1:0089-Error FSP Direct test
+$
+#90
+NSC1:0090-Error GUSP test
+$
