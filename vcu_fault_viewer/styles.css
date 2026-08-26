@@ -542,6 +542,58 @@ input[type="checkbox"] {
   white-space: normal;
 }
 
+.depth-pivot-table thead tr:first-child th {
+  top: 0;
+  z-index: 4;
+}
+
+.depth-pivot-table .depth-filter-row th {
+  top: 54px;
+  z-index: 3;
+  height: auto;
+  min-width: 140px;
+  padding: 6px;
+  vertical-align: top;
+  background: #e8eef7;
+  color: var(--ink);
+}
+
+.depth-pivot-table .depth-filter-row .parameter-filter-cell {
+  min-width: 190px;
+  max-width: 230px;
+}
+
+.depth-column-controls {
+  display: grid;
+  gap: 5px;
+}
+
+.depth-column-controls input,
+.depth-column-controls select {
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid #aeb8c4;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.depth-column-controls input:focus,
+.depth-column-controls select:focus {
+  outline: 2px solid #80aaff;
+  border-color: var(--brand);
+}
+
+.depth-number-filter {
+  display: grid;
+  grid-template-columns: 52px minmax(70px, 1fr);
+  gap: 4px;
+}
+
 .depth-pivot-table .parameter-heading {
   min-width: 190px;
   max-width: 230px;
@@ -589,6 +641,12 @@ input[type="checkbox"] {
 .depth-pivot-table th:nth-child(2) {
   z-index: 4;
   background: var(--brand-dark);
+}
+
+.depth-pivot-table .depth-filter-row th:nth-child(1),
+.depth-pivot-table .depth-filter-row th:nth-child(2) {
+  z-index: 5;
+  background: #e8eef7;
 }
 
 .depth-pivot-table td:nth-child(1) {

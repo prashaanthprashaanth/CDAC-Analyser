@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VCU Fault DDS Viewer</title>
-  <link rel="stylesheet" href="styles.css?v=20260817-2">
+  <link rel="stylesheet" href="styles.css?v=20260827-1">
 </head>
 <body>
   <main class="app-shell">
@@ -27,7 +27,7 @@
             <span>CGL</span>
           </label>
         </fieldset>
-        <label class="file-button" title="Open VCU binary txt log">
+        <label class="file-button" title="Open VCU binary TXT log">
           <span aria-hidden="true">+</span>
           <span>Upload TXT</span>
           <input id="fileInput" type="file" accept=".txt,.log,*/*">
@@ -188,6 +188,7 @@
             <p id="depthResultsSubtitle"></p>
           </div>
           <div class="analysis-actions">
+            <button id="depthClearFilters" type="button" disabled>Clear filters</button>
             <button id="depthExcelExport" type="button">Excel</button>
             <button id="depthPdfExport" type="button">PDF</button>
             <button id="depthChangeParameters" type="button">Change parameters</button>
@@ -337,6 +338,6 @@
   <script src="vendor/jspdf.plugin.autotable.min.js"></script>
   <script src="data/dictionaries.js"></script>
   <script src="decoder.js?v=20260817-2"></script>
-  <script src="app.js?v=20260817-2"></script>
+  <script src="app.js?v=20260827-1"></script>
 </body>
 </html>

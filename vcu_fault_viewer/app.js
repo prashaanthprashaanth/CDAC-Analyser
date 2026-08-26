@@ -9,6 +9,8 @@
     depthFaultIds: new Set(),
     availableParameters: [],
     selectedParameterKeys: new Set(),
+    depthColumnFilters: new Map(),
+    depthSort: { key: "", direction: "" },
     view: "faults",
     buffer: null,
     propulsion: "CGL",
@@ -49,6 +51,7 @@
     depthChangeParameters: document.getElementById("depthChangeParameters"),
     depthResultsSubtitle: document.getElementById("depthResultsSubtitle"),
     depthResultsBody: document.getElementById("depthResultsBody"),
+    depthClearFilters: document.getElementById("depthClearFilters"),
     depthExcelExport: document.getElementById("depthExcelExport"),
     depthPdfExport: document.getElementById("depthPdfExport"),
     parameterDialog: document.getElementById("parameterDialog"),
@@ -190,7 +193,7 @@
       .replace(/&/g, "\\u0026")
       .replace(/\u2028/g, "\\u2028")
       .replace(/\u2029/g, "\\u2029");
-    const title = `${report.propulsion} VCU Fault and Environment Report`;
+    const title = `${report.propulsion} Fault Report`;
     return `<!doctype html>
 <html lang="en">
 <head>
@@ -198,235 +201,360 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${htmlText(title)}</title>
   <style>
-    :root { --brand:#0c3d91; --brand-dark:#051c5d; --ink:#101820; --muted:#4b5563; --line:#c9d2dc; --workspace:#eef2f7; --panel:#fff; --selected:#d8eaff; }
-    * { box-sizing:border-box; }
-    html, body { height:100%; }
-    body { margin:0; overflow:hidden; color:var(--ink); background:var(--workspace); font:600 13px/1.4 "Segoe UI",Arial,sans-serif; }
-    .report-header { min-height:76px; padding:10px 18px; color:#fff; background:var(--brand-dark); display:flex; align-items:center; justify-content:space-between; gap:20px; }
-    .report-header h1 { margin:0; font-size:21px; letter-spacing:0; }
-    .report-header p { margin:3px 0 0; font-size:12px; }
-    .summary { display:grid; grid-template-columns:repeat(3,auto); gap:8px 20px; text-align:right; font-size:12px; }
-    .summary strong { display:block; font-size:15px; }
-    .main { height:calc(100% - 76px); display:flex; overflow:hidden; }
-    .pane { min-width:0; padding:12px; display:flex; flex-direction:column; overflow:hidden; }
-    .fault-pane { width:44%; min-width:320px; max-width:75%; resize:horizontal; background:#fff; border-right:3px solid var(--line); }
-    .environment-pane { flex:1; }
-    .toolbar { min-height:42px; display:flex; align-items:center; gap:10px; padding-bottom:10px; }
-    .toolbar input { min-width:0; flex:1; height:34px; padding:0 10px; border:1px solid #aeb8c4; border-radius:4px; font:inherit; }
-    .toolbar input:focus { outline:2px solid #80aaff; border-color:var(--brand); }
-    .count { white-space:nowrap; color:var(--muted); }
-    .table-scroll { flex:1; overflow:auto; border:1px solid var(--line); background:#fff; }
-    table { width:100%; border-collapse:collapse; font-size:13px; }
-    th, td { padding:7px 9px; border:1px solid #dbe1e8; text-align:left; vertical-align:top; }
-    th { position:sticky; top:0; z-index:2; color:var(--brand-dark); background:#e8eef7; cursor:pointer; user-select:none; white-space:nowrap; }
-    #faultTable td:nth-child(1), #faultTable td:nth-child(2), #faultTable td:nth-child(3), #faultTable td:nth-child(4) { white-space:nowrap; }
-    #faultTable td:last-child { min-width:260px; white-space:normal; font-weight:700; }
-    tbody tr:hover td { background:#f0f5fb; }
-    #faultTable tbody tr { cursor:pointer; }
-    #faultTable tr.active td { background:var(--selected); }
-    .selected-fault { min-height:42px; padding-bottom:8px; }
-    .selected-fault h2 { margin:0; color:var(--brand-dark); font-size:15px; }
-    .selected-fault p { margin:2px 0 0; color:var(--muted); font-size:12px; }
-    .environment-tools { display:flex; align-items:flex-start; gap:12px; }
-    .environment-tools .selected-fault { flex:1; min-width:0; }
-    .environment-tools input { width:min(430px,45%); flex:none; }
-    .env-grid { min-height:0; flex:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:10px; }
-    .env-section { min-width:0; min-height:0; display:flex; flex-direction:column; border:1px solid #aeb8c4; background:#fff; overflow:hidden; }
-    .env-section h3 { margin:0; padding:7px 9px; color:#fff; background:var(--brand-dark); font-size:13px; }
-    .env-section .table-scroll { border:0; }
-    .env-section table { font-size:12px; }
-    .env-section th { background:#edf2f8; color:var(--ink); }
-    .value-true { color:#087452; font-weight:800; }
-    .value-false { color:#4b5563; font-weight:700; }
-    .empty { grid-column:1/-1; display:grid; place-items:center; padding:30px; color:var(--muted); background:#fff; border:1px solid var(--line); text-align:center; }
-    .no-rows { color:var(--muted); font-style:italic; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f4f5f7;
+      color: #333;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #003366;
+      color: white;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .pane {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+    }
+    .pane-left {
+      border-right: 4px solid #ccd2d9;
+      background-color: #fff;
+      width: 40%;
+      flex: none;
+      resize: horizontal;
+      min-width: 20%;
+      max-width: 80%;
+    }
+    .pane-right {
+      background-color: #f4f5f7;
+    }
+    .toolbar {
+      padding-bottom: 12px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    .toolbar input {
+      padding: 6px 12px;
+      width: 350px;
+      border: 1px solid #aebac6;
+      border-radius: 3px;
+      font-size: 0.95rem;
+    }
+    .toolbar input:focus {
+      outline: none;
+      border-color: #003366;
+      box-shadow: 0 0 3px rgba(0, 51, 102, 0.5);
+    }
+    .table-container {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #aebac6;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 6px 10px;
+      border: 1px solid #d5dbe0;
+      text-align: left;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    th {
+      background-color: #e4e9f0;
+      color: #003366;
+      position: sticky;
+      top: 0;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      z-index: 5;
+      resize: horizontal;
+      overflow: auto;
+    }
+    th:hover {
+      background-color: #d1dae3;
+    }
+    tr:hover td {
+      background-color: #f0f4f8;
+      cursor: pointer;
+    }
+    tr.active td {
+      background-color: #cce0ff !important;
+    }
+    .bg-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 15px;
+      overflow-y: auto;
+      flex: 1;
+      box-sizing: border-box;
+    }
+    .bg-table-card {
+      border: 1px solid #aebac6;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      min-height: 0;
+    }
+    .bg-table-header {
+      background-color: #003366;
+      color: white;
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .bg-table-wrapper {
+      overflow-y: auto;
+      flex: 1;
+    }
+    .bg-table-wrapper th {
+      background-color: #f0f4f8;
+      color: #333;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .bg-table-wrapper tr:hover td {
+      background-color: #fff;
+      cursor: default;
+    }
+    .empty-state {
+      padding: 30px;
+      text-align: center;
+      color: #555;
+      grid-column: 1 / -1;
+      font-style: italic;
+    }
+    .val-true { color: #008000; font-weight: bold; }
+    .val-false { color: #666; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #bcc5ce; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #99a5b3; }
     @media (max-width:900px) {
-      body { overflow:auto; }
-      .report-header { align-items:flex-start; flex-direction:column; }
-      .summary { grid-template-columns:repeat(2,auto); text-align:left; }
-      .main { height:auto; min-height:calc(100% - 76px); flex-direction:column; overflow:visible; }
-      .fault-pane { width:100%; max-width:none; min-width:0; height:48vh; resize:none; border-right:0; border-bottom:3px solid var(--line); }
-      .environment-pane { min-height:900px; }
-      .env-grid { grid-template-columns:1fr; grid-template-rows:repeat(4,280px); }
-      .environment-tools { flex-direction:column; }
-      .environment-tools input { width:100%; }
+      body { overflow: auto; }
+      .main-container { min-height: 1200px; flex-direction: column; overflow: visible; }
+      .pane-left { width: auto; min-width: 0; max-width: none; height: 45vh; resize: none; border-right: 0; border-bottom: 4px solid #ccd2d9; }
+      .toolbar { flex-direction: column; align-items: stretch; gap: 8px; }
+      .toolbar input { width: auto !important; }
+      .bg-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 280px); overflow: visible; }
     }
   </style>
 </head>
 <body>
-  <header class="report-header">
-    <div>
-      <h1>CDAC VCU FAULT ANALYSER</h1>
-      <p>${htmlText(report.propulsion)} Diagnostic Report | ${htmlText(report.sourceFile)} | Developed by ELS/ED</p>
-    </div>
-    <div class="summary">
-      <span><strong>${report.recordCount.toLocaleString("en-IN")}</strong>log records</span>
-      <span><strong>${report.faultCount.toLocaleString("en-IN")}</strong>fault entries</span>
-      <span><strong>${report.definedCount.toLocaleString("en-IN")}</strong>faults with DDS text</span>
-      <span>${htmlText(report.dateRange)}</span>
-    </div>
-  </header>
-  <main class="main">
-    <section class="pane fault-pane">
+  <div class="header">${htmlText(report.propulsion)} Diagnostic Report (Formal Data View)</div>
+  <div class="main-container">
+    <div class="pane pane-left">
       <div class="toolbar">
-        <input id="faultSearch" type="search" placeholder="Filter faults by Device, Date, Time, or Message">
-        <span id="faultCount" class="count"></span>
+        <input type="text" id="searchInput" placeholder="Filter faults by Device, Date, Time, or Message..." onkeyup="filterFaults()">
+        <span id="faultCount" style="font-size: 0.9rem; color: #555; font-weight: bold;"></span>
       </div>
-      <div class="table-scroll">
+      <div class="table-container">
         <table id="faultTable">
-          <thead><tr>
-            <th data-sort="id">No. &#x21C5;</th>
-            <th data-sort="device">Device &#x21C5;</th>
-            <th data-sort="date_time">Date Time &#x21C5;</th>
-            <th data-sort="msg">Message &#x21C5;</th>
-          </tr></thead>
-          <tbody id="faultRows"></tbody>
+          <thead>
+            <tr>
+              <th onclick="sortTable(0, 'num')">No. &#x21C5;</th>
+              <th onclick="sortTable(1, 'str')">Device &#x21C5;</th>
+              <th onclick="sortTable(2, 'str')">Date Time &#x21C5;</th>
+              <th onclick="sortTable(3, 'str')">Message &#x21C5;</th>
+            </tr>
+          </thead>
+          <tbody id="faultListBody"></tbody>
         </table>
       </div>
-    </section>
-    <section class="pane environment-pane">
-      <div class="environment-tools">
-        <div id="selectedFault" class="selected-fault">
-          <h2>Environment Data</h2>
-          <p>Select a fault occurrence from the left.</p>
-        </div>
-        <input id="environmentSearch" type="search" placeholder="Filter environment parameters" disabled>
+    </div>
+    <div class="pane pane-right">
+      <div class="toolbar">
+        <input type="text" id="bgSearchInput" placeholder="Filter background data (Process Value, Name, Value)..." onkeyup="filterBgData()" style="width: 100%;">
       </div>
-      <div id="environmentGrid" class="env-grid">
-        <div class="empty">Select a fault occurrence to view all global and processor-specific environment data.</div>
+      <div class="bg-grid" id="bgGrid">
+        <div class="empty-state">Select a fault record on the left to view its environmental background data.</div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
   <script>
     const FAULT_DATA = ${serialized};
-    const faultRows = document.getElementById("faultRows");
-    const environmentGrid = document.getElementById("environmentGrid");
-    const selectedFault = document.getElementById("selectedFault");
-    const faultSearch = document.getElementById("faultSearch");
-    const environmentSearch = document.getElementById("environmentSearch");
+    const tbody = document.getElementById("faultListBody");
     const faultCount = document.getElementById("faultCount");
-    let visibleFaults = FAULT_DATA.slice();
-    let activeFaultId = null;
-    let faultSort = { key:"id", ascending:true };
-    const environmentSort = {};
+    const bgGrid = document.getElementById("bgGrid");
+    const bgSearchInput = document.getElementById("bgSearchInput");
+    let sortCol = -1;
+    let sortAsc = true;
+    const bgSortStates = {};
 
     function escapeText(value) {
       return String(value == null ? "" : value)
-        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
     }
 
-    function renderFaults() {
-      faultRows.innerHTML = visibleFaults.map(function(fault) {
-        return '<tr data-fault-id="' + fault.id + '"' + (fault.id === activeFaultId ? ' class="active"' : '') + '>'
-          + '<td>' + fault.id + '</td><td>' + escapeText(fault.device) + '</td>'
-          + '<td>' + escapeText(fault.date_time) + '</td><td>' + escapeText(fault.msg) + '</td></tr>';
-      }).join("");
-      faultRows.querySelectorAll("tr").forEach(function(row) {
-        row.addEventListener("click", function() { selectFault(Number(row.dataset.faultId)); });
+    function init() {
+      renderTable(FAULT_DATA);
+      updateCount(FAULT_DATA.length);
+    }
+
+    function updateCount(count) {
+      faultCount.textContent = count.toLocaleString("en-IN") + " fault records found";
+    }
+
+    function renderTable(data) {
+      tbody.innerHTML = "";
+      data.forEach(function(fault) {
+        const row = document.createElement("tr");
+        row.dataset.faultId = String(fault.id);
+        row.innerHTML = "<td>" + escapeText(fault.id) + "</td>"
+          + "<td>" + escapeText(fault.device) + "</td>"
+          + "<td>" + escapeText(fault.date_time) + "</td>"
+          + '<td style="white-space: normal;">' + escapeText(fault.msg) + "</td>";
+        row.onclick = function() { selectFault(row, fault); };
+        tbody.appendChild(row);
       });
-      faultCount.textContent = visibleFaults.length.toLocaleString("en-IN") + " faults";
     }
 
     function filterFaults() {
-      const query = faultSearch.value.trim().toLowerCase();
-      visibleFaults = FAULT_DATA.filter(function(fault) {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = FAULT_DATA.filter(function(fault) {
         return [fault.id, fault.device, fault.date_time, fault.msg]
-          .some(function(value) { return String(value).toLowerCase().includes(query); });
+          .some(function(value) { return String(value == null ? "" : value).toLowerCase().includes(query); });
       });
-      applyFaultSort();
+      renderTable(filtered);
+      updateCount(filtered.length);
+      bgGrid.innerHTML = '<div class="empty-state">Select a fault record on the left to view its environmental background data.</div>';
+      bgSearchInput.value = "";
     }
 
-    function applyFaultSort() {
-      const key = faultSort.key;
-      const direction = faultSort.ascending ? 1 : -1;
-      visibleFaults.sort(function(a,b) {
-        const left = a[key];
-        const right = b[key];
-        if (typeof left === "number" && typeof right === "number") return (left - right) * direction;
-        return String(left).localeCompare(String(right), undefined, { numeric:true }) * direction;
-      });
-      renderFaults();
-    }
-
-    function valueHtml(value) {
-      const text = escapeText(value);
-      if (value === "TRUE") return '<span class="value-true">TRUE</span>';
-      if (value === "FALSE") return '<span class="value-false">FALSE</span>';
-      return text;
-    }
-
-    function renderEnvironmentTable(id, title, rows) {
-      const body = rows.length
-        ? rows.map(function(row) { return '<tr><td>' + escapeText(row[0]) + '</td><td>' + escapeText(row[1]) + '</td><td>' + valueHtml(row[2]) + '</td></tr>'; }).join("")
-        : '<tr class="no-rows"><td colspan="3">No values defined for this category</td></tr>';
-      return '<section class="env-section"><h3>' + escapeText(title) + '</h3><div class="table-scroll"><table id="' + id + '">'
-        + '<thead><tr><th data-column="0">ProcessValue &#x21C5;</th><th data-column="1">SignalName &#x21C5;</th><th data-column="2">SignalValue &#x21C5;</th></tr></thead>'
-        + '<tbody>' + body + '</tbody></table></div></section>';
-    }
-
-    function selectFault(id) {
-      const fault = FAULT_DATA.find(function(item) { return item.id === id; });
-      if (!fault) return;
-      activeFaultId = id;
-      renderFaults();
-      selectedFault.innerHTML = '<h2>' + escapeText(fault.msg) + '</h2><p>No. ' + fault.id
-        + ' | ' + escapeText(fault.date_time) + ' | Device ' + escapeText(fault.device) + '</p>';
-      environmentGrid.innerHTML = renderEnvironmentTable("globalBinary", "Binary Global Process Values", fault.bg_items)
-        + renderEnvironmentTable("globalAnalog", "Analog Global Process Values", fault.ag_items)
-        + renderEnvironmentTable("processorBinary", "Binary Processor Specific Process Values", fault.bp_items)
-        + renderEnvironmentTable("processorAnalog", "Analog Processor Specific Process Values", fault.ap_items);
-      environmentSearch.disabled = false;
-      environmentSearch.value = "";
-      bindEnvironmentSorting();
-    }
-
-    function bindEnvironmentSorting() {
-      environmentGrid.querySelectorAll("th[data-column]").forEach(function(header) {
-        header.addEventListener("click", function() {
-          const table = header.closest("table");
-          sortEnvironmentTable(table, Number(header.dataset.column));
+    function filterBgData() {
+      const query = bgSearchInput.value.toLowerCase();
+      document.querySelectorAll(".bg-table-wrapper tbody").forEach(function(body) {
+        body.querySelectorAll("tr").forEach(function(row) {
+          row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
         });
       });
     }
 
-    function sortEnvironmentTable(table, column) {
-      const state = environmentSort[table.id] || { column:-1, ascending:true };
-      state.ascending = state.column === column ? !state.ascending : true;
-      state.column = column;
-      environmentSort[table.id] = state;
-      const body = table.tBodies[0];
-      const rows = Array.from(body.rows).filter(function(row) { return row.cells.length === 3; });
-      rows.sort(function(a,b) {
-        const left = a.cells[column].textContent.trim();
-        const right = b.cells[column].textContent.trim();
+    function sortTable(colIdx, type) {
+      if (sortCol === colIdx) sortAsc = !sortAsc;
+      else {
+        sortCol = colIdx;
+        sortAsc = true;
+      }
+      const currentData = Array.from(tbody.querySelectorAll("tr")).map(function(row) {
+        const id = Number(row.dataset.faultId || row.cells[0].innerText);
+        return FAULT_DATA.find(function(fault) { return fault.id === id; });
+      }).filter(Boolean);
+      currentData.sort(function(a, b) {
+        const left = colIdx === 0 ? a.id : colIdx === 1 ? a.device : colIdx === 2 ? a.date_time : a.msg;
+        const right = colIdx === 0 ? b.id : colIdx === 1 ? b.device : colIdx === 2 ? b.date_time : b.msg;
+        if (type === "num") return sortAsc ? left - right : right - left;
+        return sortAsc
+          ? String(left).localeCompare(String(right), undefined, { numeric: true })
+          : String(right).localeCompare(String(left), undefined, { numeric: true });
+      });
+      renderTable(currentData);
+    }
+
+    function sortBgTable(tableId, colIdx) {
+      const table = document.getElementById(tableId);
+      const body = table.querySelector("tbody");
+      const rows = Array.from(body.querySelectorAll("tr"));
+      if (!bgSortStates[tableId]) bgSortStates[tableId] = { col: -1, asc: true };
+      if (bgSortStates[tableId].col === colIdx) {
+        bgSortStates[tableId].asc = !bgSortStates[tableId].asc;
+      } else {
+        bgSortStates[tableId].col = colIdx;
+        bgSortStates[tableId].asc = true;
+      }
+      const asc = bgSortStates[tableId].asc;
+      rows.sort(function(a, b) {
+        const left = a.cells[colIdx].innerText;
+        const right = b.cells[colIdx].innerText;
         const leftNumber = Number.parseFloat(left);
         const rightNumber = Number.parseFloat(right);
-        const comparison = Number.isFinite(leftNumber) && Number.isFinite(rightNumber)
-          ? leftNumber - rightNumber
-          : left.localeCompare(right, undefined, { numeric:true });
-        return state.ascending ? comparison : -comparison;
+        if (!Number.isNaN(leftNumber) && !Number.isNaN(rightNumber)) {
+          return asc ? leftNumber - rightNumber : rightNumber - leftNumber;
+        }
+        return asc
+          ? left.localeCompare(right, undefined, { numeric: true })
+          : right.localeCompare(left, undefined, { numeric: true });
       });
+      body.innerHTML = "";
       rows.forEach(function(row) { body.appendChild(row); });
     }
 
-    faultSearch.addEventListener("input", filterFaults);
-    environmentSearch.addEventListener("input", function() {
-      const query = environmentSearch.value.trim().toLowerCase();
-      environmentGrid.querySelectorAll("tbody tr").forEach(function(row) {
-        row.hidden = !row.textContent.toLowerCase().includes(query);
+    function formatVal(value) {
+      const text = escapeText(value);
+      if (value === "TRUE") return '<span class="val-true">TRUE</span>';
+      if (value === "FALSE") return '<span class="val-false">FALSE</span>';
+      return text;
+    }
+
+    function selectFault(row, fault) {
+      Array.from(tbody.querySelectorAll("tr")).forEach(function(item) {
+        item.classList.remove("active");
       });
-    });
-    document.querySelectorAll("#faultTable th[data-sort]").forEach(function(header) {
-      header.addEventListener("click", function() {
-        const key = header.dataset.sort;
-        faultSort.ascending = faultSort.key === key ? !faultSort.ascending : true;
-        faultSort.key = key;
-        applyFaultSort();
-      });
-    });
-    renderFaults();
-    if (FAULT_DATA.length) selectFault(FAULT_DATA[0].id);
+      row.classList.add("active");
+      bgSearchInput.value = "";
+      if (!fault.has_env) {
+        bgGrid.innerHTML = '<div class="empty-state">No background data available for this fault.</div>';
+        return;
+      }
+      let html = "";
+      html += renderBgTable("bg_t1", "Binary Global Process Values", ["ProcessValue", "SignalName", "Value"], fault.bg_items);
+      html += renderBgTable("bg_t2", "Analog Global Process Values", ["ProcessValue", "SignalName", "SignalValue"], fault.ag_items);
+      html += renderBgTable("bg_t3", "Binary Processor Specific Process Values", ["ProcessValue", "SignalName", "Value"], fault.bp_items);
+      html += renderBgTable("bg_t4", "Analog Processor Specific Process Values", ["ProcessValue", "SignalName", "SignalValue"], fault.ap_items);
+      bgGrid.innerHTML = html || '<div class="empty-state">No mapped data available for this fault.</div>';
+    }
+
+    function renderBgTable(tableId, title, columns, rows) {
+      if (!rows || !rows.length) return "";
+      const headings = columns.map(function(column, index) {
+        return '<th onclick="sortBgTable(\\'' + tableId + '\\', ' + index + ')">' + escapeText(column) + " &#x21C5;</th>";
+      }).join("");
+      const body = rows.map(function(row) {
+        return "<tr>" + row.map(function(cell) {
+          return "<td>" + formatVal(cell) + "</td>";
+        }).join("") + "</tr>";
+      }).join("");
+      return '<div class="bg-table-card">'
+        + '<div class="bg-table-header">' + escapeText(title) + "</div>"
+        + '<div class="bg-table-wrapper">'
+        + '<table id="' + tableId + '"><thead><tr>' + headings + '</tr></thead><tbody>' + body + "</tbody></table>"
+        + "</div></div>";
+    }
+
+    init();
   </script>
 </body>
 </html>`;
@@ -970,9 +1098,281 @@
     return { faults, parameters, comparisons };
   }
 
+  function parseDepthNumber(value) {
+    const text = String(value ?? "").trim().replace(/,/g, "");
+    const match = text.match(/^([+-]?(?:\d+(?:\.\d*)?|\.\d+))(?:\s|$)/);
+    if (!match) return null;
+    const number = Number(match[1]);
+    return Number.isFinite(number) ? number : null;
+  }
+
+  function depthParameterType(parameter, comparisons) {
+    const values = comparisons
+      .filter((comparison) => comparison.values.has(parameter.key))
+      .map((comparison) => String(comparison.values.get(parameter.key) ?? "").trim())
+      .filter((value) => value && value !== "Not available");
+    if (values.length && values.every((value) => value === "TRUE" || value === "FALSE")) return "binary";
+    if (values.length && values.every((value) => parseDepthNumber(value) !== null)) return "number";
+    return "text";
+  }
+
+  function depthColumnDefinitions(data) {
+    return [
+      {
+        key: "meta:date",
+        label: "Date & Time",
+        filterType: "text",
+        sortType: "date",
+        value: (comparison) => comparison.fault.record.dateText,
+        sortValue: (comparison) => comparison.fault.record.date.getTime(),
+        isDate: true
+      },
+      {
+        key: "meta:fault",
+        label: "Fault DDS",
+        filterType: "text",
+        sortType: "text",
+        value: (comparison) => comparison.fault.faultText
+      },
+      {
+        key: "meta:processor",
+        label: "Processor",
+        filterType: "text",
+        sortType: "text",
+        value: (comparison) => comparison.fault.record.processor
+      },
+      {
+        key: "meta:slNo",
+        label: "SL_No",
+        filterType: "number",
+        sortType: "number",
+        value: (comparison) => comparison.fault.record.slNo
+      },
+      {
+        key: "meta:info1",
+        label: "Info1",
+        filterType: "number",
+        sortType: "number",
+        value: (comparison) => comparison.fault.info1
+      },
+      ...data.parameters.map((parameter) => {
+        const filterType = depthParameterType(parameter, data.comparisons);
+        return {
+          key: `parameter:${parameter.key}`,
+          label: parameter.process || parameter.signal,
+          signal: parameter.signal || "No signal name",
+          title: `${parameter.scope} | ${parameter.kind} | ${parameter.signal || "No signal name"}`,
+          filterType,
+          sortType: filterType === "number" ? "number" : "text",
+          parameter,
+          value: (comparison) => comparison.values.has(parameter.key)
+            ? comparison.values.get(parameter.key)
+            : "Not available"
+        };
+      })
+    ];
+  }
+
+  function depthFilterMatches(comparison, column) {
+    const filter = state.depthColumnFilters.get(column.key);
+    if (!filter) return true;
+    const value = column.value(comparison);
+    if (column.filterType === "binary") {
+      return !filter.value || String(value).toUpperCase() === filter.value;
+    }
+    if (column.filterType === "number") {
+      if (!filter.operator || filter.value === "") return true;
+      const actual = parseDepthNumber(value);
+      const expected = Number(filter.value);
+      if (actual === null || !Number.isFinite(expected)) return false;
+      if (filter.operator === "lt") return actual < expected;
+      if (filter.operator === "lte") return actual <= expected;
+      if (filter.operator === "gt") return actual > expected;
+      if (filter.operator === "gte") return actual >= expected;
+      return actual === expected;
+    }
+    const query = String(filter.value || "").trim().toLowerCase();
+    return !query || String(value ?? "").toLowerCase().includes(query);
+  }
+
+  function applyDepthFiltersAndSort(comparisons, columns) {
+    const visible = comparisons.filter((comparison) =>
+      columns.every((column) => depthFilterMatches(comparison, column))
+    );
+    const sortColumn = columns.find((column) => column.key === state.depthSort.key);
+    if (!sortColumn || !state.depthSort.direction) return visible;
+    return [...visible].sort((a, b) => {
+      const rawA = sortColumn.sortValue ? sortColumn.sortValue(a) : sortColumn.value(a);
+      const rawB = sortColumn.sortValue ? sortColumn.sortValue(b) : sortColumn.value(b);
+      const valueA = sortColumn.sortType === "number" ? parseDepthNumber(rawA) : rawA;
+      const valueB = sortColumn.sortType === "number" ? parseDepthNumber(rawB) : rawB;
+      const missingA = valueA === null || valueA === undefined || valueA === "" || valueA === "Not available";
+      const missingB = valueB === null || valueB === undefined || valueB === "" || valueB === "Not available";
+      if (missingA !== missingB) return missingA ? 1 : -1;
+      let result = 0;
+      if (sortColumn.sortType === "number" || sortColumn.sortType === "date") {
+        result = Number(valueA) - Number(valueB);
+      } else {
+        result = String(valueA).localeCompare(String(valueB), undefined, { numeric: true, sensitivity: "base" });
+      }
+      return state.depthSort.direction === "desc" ? -result : result;
+    });
+  }
+
+  function addSelectOption(select, value, label) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    select.appendChild(option);
+  }
+
+  function createDepthFilterCell(column, refreshRows) {
+    const cell = document.createElement("th");
+    cell.className = "depth-filter-cell";
+    if (column.parameter) cell.classList.add("parameter-filter-cell");
+    cell.dataset.columnKey = column.key;
+    cell.dataset.filterType = column.filterType;
+    const controls = document.createElement("div");
+    controls.className = "depth-column-controls";
+    const current = state.depthColumnFilters.get(column.key) || {};
+
+    if (column.filterType === "binary") {
+      const select = document.createElement("select");
+      select.className = "depth-value-filter";
+      select.setAttribute("aria-label", `Filter ${column.label}`);
+      addSelectOption(select, "", "All values");
+      addSelectOption(select, "TRUE", "TRUE");
+      addSelectOption(select, "FALSE", "FALSE");
+      select.value = current.value || "";
+      select.addEventListener("change", () => {
+        state.depthColumnFilters.set(column.key, { value: select.value });
+        refreshRows();
+      });
+      controls.appendChild(select);
+    } else if (column.filterType === "number") {
+      const pair = document.createElement("div");
+      pair.className = "depth-number-filter";
+      const operator = document.createElement("select");
+      operator.className = "depth-number-operator";
+      operator.setAttribute("aria-label", `Comparison for ${column.label}`);
+      [["", "All"], ["lt", "<"], ["lte", "<="], ["eq", "="], ["gte", ">="], ["gt", ">"]]
+        .forEach(([value, label]) => addSelectOption(operator, value, label));
+      operator.value = current.operator || "";
+      const input = document.createElement("input");
+      input.type = "number";
+      input.step = "any";
+      input.className = "depth-number-value";
+      input.placeholder = "Value";
+      input.value = current.value || "";
+      input.setAttribute("aria-label", `Value for ${column.label}`);
+      const update = () => {
+        if (input.value && !operator.value) operator.value = "eq";
+        state.depthColumnFilters.set(column.key, { operator: operator.value, value: input.value });
+        refreshRows();
+      };
+      operator.addEventListener("change", update);
+      input.addEventListener("input", update);
+      pair.append(operator, input);
+      controls.appendChild(pair);
+    } else {
+      const input = document.createElement("input");
+      input.type = "search";
+      input.className = "depth-text-filter";
+      input.placeholder = "Search...";
+      input.value = current.value || "";
+      input.setAttribute("aria-label", `Search ${column.label}`);
+      input.addEventListener("input", () => {
+        state.depthColumnFilters.set(column.key, { value: input.value });
+        refreshRows();
+      });
+      controls.appendChild(input);
+    }
+
+    const sort = document.createElement("select");
+    sort.className = "depth-sort-select";
+    sort.dataset.columnKey = column.key;
+    sort.setAttribute("aria-label", `Sort ${column.label}`);
+    addSelectOption(sort, "", "No sort");
+    addSelectOption(sort, "asc", "Sort ascending");
+    addSelectOption(sort, "desc", "Sort descending");
+    sort.value = state.depthSort.key === column.key ? state.depthSort.direction : "";
+    sort.addEventListener("change", () => {
+      state.depthSort = { key: sort.value ? column.key : "", direction: sort.value };
+      el.depthResultsBody.querySelectorAll(".depth-sort-select").forEach((other) => {
+        if (other !== sort) other.value = "";
+      });
+      refreshRows();
+    });
+    controls.appendChild(sort);
+    cell.appendChild(controls);
+    return cell;
+  }
+
+  function updateDepthResultsSubtitle(parameterCount, visibleCount, totalCount) {
+    const parameterText = `${parameterCount.toLocaleString("en-IN")} parameters compared`;
+    el.depthResultsSubtitle.textContent = visibleCount === totalCount
+      ? `${parameterText} across ${totalCount.toLocaleString("en-IN")} fault occurrences`
+      : `${parameterText} | ${visibleCount.toLocaleString("en-IN")} of ${totalCount.toLocaleString("en-IN")} occurrences match filters`;
+  }
+
+  function hasActiveDepthFilters() {
+    if (state.depthSort.direction) return true;
+    return [...state.depthColumnFilters.values()].some((filter) =>
+      Boolean(filter.value) || Boolean(filter.operator)
+    );
+  }
+
+  function renderDepthResultRows(tbody, data, columns) {
+    const comparisons = applyDepthFiltersAndSort(data.comparisons, columns);
+    updateDepthResultsSubtitle(data.parameters.length, comparisons.length, data.comparisons.length);
+    el.depthClearFilters.disabled = !hasActiveDepthFilters();
+    tbody.textContent = "";
+    const fragment = document.createDocumentFragment();
+    for (const comparison of comparisons) {
+      const row = document.createElement("tr");
+      for (const column of columns) {
+        const cell = document.createElement("td");
+        const value = column.value(comparison);
+        if (column.isDate) {
+          const dateButton = document.createElement("button");
+          dateButton.type = "button";
+          dateButton.className = "analysis-date";
+          dateButton.textContent = value;
+          dateButton.title = "Open environment data for this fault occurrence";
+          dateButton.addEventListener("click", () => showDetail(comparison.fault));
+          cell.appendChild(dateButton);
+        } else {
+          cell.textContent = value;
+        }
+        if (column.parameter) cell.classList.add("parameter-value");
+        if (value === "Not available") cell.classList.add("not-available");
+        if (value === "TRUE") cell.classList.add("true-value");
+        if (value === "FALSE") cell.classList.add("false-value");
+        row.appendChild(cell);
+      }
+      fragment.appendChild(row);
+    }
+    if (!comparisons.length) {
+      const row = document.createElement("tr");
+      row.className = "empty-row";
+      const cell = document.createElement("td");
+      cell.colSpan = columns.length;
+      cell.textContent = "No depth-analysis rows match the selected filters.";
+      row.appendChild(cell);
+      fragment.appendChild(row);
+    }
+    tbody.appendChild(fragment);
+    return comparisons;
+  }
+
   function renderDepthResults() {
-    const { faults, parameters, comparisons } = buildDepthComparisonData();
-    el.depthResultsSubtitle.textContent = `${parameters.length.toLocaleString("en-IN")} parameters compared across ${faults.length.toLocaleString("en-IN")} fault occurrences`;
+    const data = buildDepthComparisonData();
+    const columns = depthColumnDefinitions(data);
+    const validKeys = new Set(columns.map((column) => column.key));
+    for (const key of state.depthColumnFilters.keys()) {
+      if (!validKeys.has(key)) state.depthColumnFilters.delete(key);
+    }
+    if (!validKeys.has(state.depthSort.key)) state.depthSort = { key: "", direction: "" };
     el.depthResultsBody.textContent = "";
 
     const tableWrap = document.createElement("div");
@@ -981,65 +1381,38 @@
     table.className = "depth-pivot-table";
     const thead = document.createElement("thead");
     const headRow = document.createElement("tr");
-    ["Date & Time", "Fault DDS", "Processor", "SL_No", "Info1"].forEach((text) => {
-      const th = document.createElement("th");
-      th.textContent = text;
-      headRow.appendChild(th);
-    });
-    for (const parameter of parameters) {
-      const th = document.createElement("th");
-      th.className = "parameter-heading";
-      th.title = `${parameter.scope} | ${parameter.kind} | ${parameter.signal || "No signal name"}`;
-      const process = document.createElement("strong");
-      process.textContent = parameter.process || parameter.signal;
-      const signal = document.createElement("small");
-      signal.textContent = parameter.signal || "No signal name";
-      th.append(process, signal);
-      headRow.appendChild(th);
-    }
-    thead.appendChild(headRow);
-
-    const tbody = document.createElement("tbody");
-    for (const comparison of comparisons) {
-      const row = document.createElement("tr");
-      const dateCell = document.createElement("td");
-      const dateButton = document.createElement("button");
-      dateButton.type = "button";
-      dateButton.className = "analysis-date";
-      dateButton.textContent = comparison.fault.record.dateText;
-      dateButton.title = "Open environment data for this fault occurrence";
-      dateButton.addEventListener("click", () => showDetail(comparison.fault));
-      dateCell.appendChild(dateButton);
-      const faultCell = document.createElement("td");
-      faultCell.textContent = comparison.fault.faultText;
-      const processorCell = document.createElement("td");
-      processorCell.textContent = comparison.fault.record.processor;
-      const refCell = document.createElement("td");
-      refCell.textContent = comparison.fault.record.slNo;
-      const infoCell = document.createElement("td");
-      infoCell.textContent = comparison.fault.info1;
-      row.append(dateCell, faultCell, processorCell, refCell, infoCell);
-
-      for (const parameter of parameters) {
-        const valueCell = document.createElement("td");
-        valueCell.className = "parameter-value";
-        const hasValue = comparison.values.has(parameter.key);
-        const value = hasValue ? comparison.values.get(parameter.key) : "Not available";
-        valueCell.textContent = value;
-        if (!hasValue) valueCell.classList.add("not-available");
-        if (value === "TRUE") valueCell.classList.add("true-value");
-        if (value === "FALSE") valueCell.classList.add("false-value");
-        row.appendChild(valueCell);
+    for (const column of columns) {
+      const cell = document.createElement("th");
+      if (column.parameter) {
+        cell.className = "parameter-heading";
+        cell.title = column.title;
+        const process = document.createElement("strong");
+        process.textContent = column.label;
+        const signal = document.createElement("small");
+        signal.textContent = column.signal;
+        cell.append(process, signal);
+      } else {
+        cell.textContent = column.label;
       }
-      tbody.appendChild(row);
+      headRow.appendChild(cell);
     }
+
+    const filterRow = document.createElement("tr");
+    filterRow.className = "depth-filter-row";
+    const tbody = document.createElement("tbody");
+    const refreshRows = () => renderDepthResultRows(tbody, data, columns);
+    columns.forEach((column) => filterRow.appendChild(createDepthFilterCell(column, refreshRows)));
+    thead.append(headRow, filterRow);
     table.append(thead, tbody);
     tableWrap.appendChild(table);
     el.depthResultsBody.appendChild(tableWrap);
+    refreshRows();
     el.depthResultsBody.scrollTop = 0;
   }
 
   function depthExportRows(data = buildDepthComparisonData()) {
+    const columns = depthColumnDefinitions(data);
+    const comparisons = applyDepthFiltersAndSort(data.comparisons, columns);
     const header = [
       "Date & Time",
       "Fault DDS",
@@ -1048,7 +1421,7 @@
       "Info1",
       ...data.parameters.map(parameterExportLabel)
     ];
-    const rows = data.comparisons.map((comparison) => [
+    const rows = comparisons.map((comparison) => [
       comparison.fault.record.dateText,
       comparison.fault.faultText,
       comparison.fault.record.processor,
@@ -1319,15 +1692,8 @@
     doc.save(environmentExportFilename(data.fault, "pdf"));
   }
 
-  async function loadFile(file) {
-    const buffer = await file.arrayBuffer();
-    state.buffer = buffer;
-    state.fileName = file.name;
-    decodeBuffer();
-  }
-
-  function decodeBuffer() {
-    state.parsed = VCUDecoder.parseLog(state.buffer, window.VCU_DICTIONARIES, state.propulsion);
+  function completeLoad(parsed, statusText) {
+    state.parsed = parsed;
     state.faults = state.parsed.faults;
     state.filtered = state.faults;
     state.selectedFault = null;
@@ -1335,13 +1701,26 @@
     state.depthFaultIds.clear();
     state.availableParameters = [];
     state.selectedParameterKeys.clear();
+    state.depthColumnFilters.clear();
+    state.depthSort = { key: "", direction: "" };
     if (state.view === "occurrences") state.view = "matrix";
     if (state.view === "depthResults") state.view = "depth";
-    el.fileStatus.textContent = `${state.fileName} loaded with ${state.propulsion} DDS`;
+    el.fileStatus.textContent = statusText;
     setSummary();
     setEnabled(true);
     setView(state.view);
     applyFilters();
+  }
+
+  async function loadFile(file) {
+    state.buffer = await file.arrayBuffer();
+    state.fileName = file.name;
+    decodeBuffer();
+  }
+
+  function decodeBuffer() {
+    const parsed = VCUDecoder.parseLog(state.buffer, window.VCU_DICTIONARIES, state.propulsion);
+    completeLoad(parsed, `${state.fileName} loaded with ${state.propulsion} DDS`);
   }
 
   el.fileInput.addEventListener("change", async (event) => {
@@ -1351,8 +1730,10 @@
       await loadFile(file);
     } catch (error) {
       console.error(error);
-      el.fileStatus.textContent = `Could not decode ${file.name}`;
+      el.fileStatus.textContent = `Could not load ${file.name}: ${error.message}`;
       setEnabled(false);
+    } finally {
+      event.target.value = "";
     }
   });
 
@@ -1398,6 +1779,11 @@
   el.depthChooseParameters.addEventListener("click", openParameterDialog);
   el.depthResultsBack.addEventListener("click", () => setView("depth"));
   el.depthChangeParameters.addEventListener("click", openParameterDialog);
+  el.depthClearFilters.addEventListener("click", () => {
+    state.depthColumnFilters.clear();
+    state.depthSort = { key: "", direction: "" };
+    renderDepthResults();
+  });
 
   el.parameterDialogClose.addEventListener("click", () => el.parameterDialog.close());
   el.parameterCancel.addEventListener("click", () => el.parameterDialog.close());
@@ -1419,6 +1805,8 @@
   el.runDepthAnalysis.addEventListener("click", () => {
     if (!state.selectedParameterKeys.size) return;
     el.parameterDialog.close();
+    state.depthColumnFilters.clear();
+    state.depthSort = { key: "", direction: "" };
     setView("depthResults");
   });
 

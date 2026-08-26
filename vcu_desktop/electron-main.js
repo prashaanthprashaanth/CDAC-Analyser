@@ -75,6 +75,7 @@ function createWindow() {
         const checks = await mainWindow.webContents.executeJavaScript(`({
           title: document.querySelector("h1")?.textContent?.trim(),
           hasUpload: Boolean(document.getElementById("fileInput")),
+          hasDepthFilters: Boolean(document.getElementById("depthClearFilters")),
           hasHtmlExport: Boolean(document.getElementById("exportHtml")),
           hasDecoder: typeof window.VCUDecoder?.parseLog === "function",
           abbCount: window.VCU_DICTIONARIES?.ddsSets?.ABB?.length || 0,
@@ -84,6 +85,7 @@ function createWindow() {
         })`);
         const passed = checks.title === "CDAC VCU FAULT ANALYSER"
           && checks.hasUpload
+          && checks.hasDepthFilters
           && checks.hasHtmlExport
           && checks.hasDecoder
           && checks.abbCount > 0

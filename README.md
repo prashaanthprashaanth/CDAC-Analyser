@@ -12,6 +12,7 @@ Current release: **2.0.0**
 - Supports ABB and CGL propulsion DDS fault descriptions.
 - Displays fault occurrences and complete global/processor-specific environment data.
 - Provides a fault count matrix and multi-parameter depth analysis.
+- Adds per-column depth-analysis search, TRUE/FALSE selection, numeric comparisons, and ascending/descending sorting; filtered order is preserved in Excel/PDF exports.
 - Exports CSV, Excel, PDF, and a standalone interactive HTML fault report.
 - HTML reports use the client-compatible `FAULT_DATA` schema:
   `id`, `device`, `date_time`, `msg`, `has_env`, `bg_items`, `ag_items`, `bp_items`, `ap_items`.
@@ -56,4 +57,3 @@ The application runtime itself does not require Python.
 - `dds/`: ABB and CGL DDS source text files.
 - `data_sources/`: device and environment mapping source data.
 - `release/`: verified standalone Windows installer.
-
