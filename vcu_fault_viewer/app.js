@@ -560,12 +560,11 @@
 </html>`;
   }
 
-  async function exportHtmlReport() {
+  function exportHtmlReport() {
     if (!state.parsed) return;
     const originalText = el.exportHtml.textContent;
     el.exportHtml.disabled = true;
     el.exportHtml.textContent = "Preparing...";
-    await new Promise((resolve) => window.requestAnimationFrame(() => window.setTimeout(resolve, 0)));
     try {
       const html = buildHtmlReport();
       const filename = `${exportBaseName()}_${state.propulsion}_fault_environment_report.html`;
