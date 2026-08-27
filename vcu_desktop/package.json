@@ -1,6 +1,6 @@
 {
   "name": "cdac-vcu-fault-analyser",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Standalone ABB and CGL VCU fault and environment data analyser",
   "main": "electron-main.js",
   "author": "ELS/ED",
@@ -26,6 +26,7 @@
     },
     "files": [
       "electron-main.js",
+      "preload.js",
       "package.json",
       "build/icon.png"
     ],

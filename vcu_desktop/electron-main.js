@@ -1,5 +1,6 @@
-const { app, BrowserWindow, Notification, session } = require("electron");
+const { app, BrowserWindow, Notification, ipcMain, session } = require("electron");
 const fs = require("fs");
+const fsp = require("fs/promises");
 const path = require("path");
 
 const isSmokeTest = process.argv.includes("--vcu-smoke-test");
@@ -11,11 +12,21 @@ if (!hasInstanceLock) {
 
 let mainWindow = null;
 
+function safeExportFilename(filename) {
+  const fallback = "vcu_export";
+  const clean = path.basename(String(filename || fallback))
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, "_")
+    .replace(/\s+/g, " ")
+    .trim();
+  return clean || fallback;
+}
+
 function uniqueDownloadPath(filename) {
   const downloads = app.getPath("downloads");
-  const extension = path.extname(filename);
-  const base = path.basename(filename, extension);
-  let candidate = path.join(downloads, filename);
+  const safeName = safeExportFilename(filename);
+  const extension = path.extname(safeName);
+  const base = path.basename(safeName, extension);
+  let candidate = path.join(downloads, safeName);
   let suffix = 2;
 
   while (fs.existsSync(candidate)) {
@@ -25,18 +36,32 @@ function uniqueDownloadPath(filename) {
   return candidate;
 }
 
+function notifyExportSaved(destination) {
+  if (!Notification.isSupported()) return;
+  new Notification({
+    title: "Export saved",
+    body: path.basename(destination)
+  }).show();
+}
+
 function configureDownloads() {
   session.defaultSession.on("will-download", (_event, item) => {
     const destination = uniqueDownloadPath(item.getFilename());
     item.setSavePath(destination);
     item.once("done", (_downloadEvent, state) => {
-      if (state === "completed" && Notification.isSupported()) {
-        new Notification({
-          title: "Export saved",
-          body: path.basename(destination)
-        }).show();
-      }
+      if (state === "completed") notifyExportSaved(destination);
     });
+  });
+}
+
+function configureExportBridge() {
+  ipcMain.handle("vcu:save-export", async (_event, payload) => {
+    const destination = uniqueDownloadPath(payload && payload.filename);
+    const bytes = payload && payload.bytes;
+    const buffer = Buffer.from(bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes);
+    await fsp.writeFile(destination, buffer);
+    notifyExportSaved(destination);
+    return { destination };
   });
 }
 
@@ -52,6 +77,7 @@ function createWindow() {
     title: "CDAC VCU Fault Analyser",
     icon: path.join(__dirname, "build", "icon.png"),
     webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
@@ -113,6 +139,7 @@ function createWindow() {
 app.whenReady().then(async () => {
   await session.defaultSession.clearCache();
   configureDownloads();
+  configureExportBridge();
   session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => {
     callback(false);
   });

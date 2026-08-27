@@ -107,16 +107,31 @@
     return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
   }
 
-  function downloadCsv(filename, rows) {
+  async function downloadCsv(filename, rows) {
     const csv = rows.map((row) => row.map(escapeCsv).join(",")).join("\r\n");
-    downloadBlob(filename, new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    await downloadBlob(filename, new Blob([csv], { type: "text/csv;charset=utf-8" }));
   }
 
-  function downloadBlob(filename, blob) {
+  async function downloadBlob(filename, blob) {
+    if (window.VCUDesktop && typeof window.VCUDesktop.saveExport === "function") {
+      await window.VCUDesktop.saveExport({
+        filename,
+        bytes: await blob.arrayBuffer()
+      });
+      return;
+    }
+
+    if (navigator.msSaveOrOpenBlob) {
+      navigator.msSaveOrOpenBlob(blob, filename);
+      return;
+    }
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
+    a.rel = "noopener";
+    a.style.display = "none";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -560,7 +575,7 @@
 </html>`;
   }
 
-  function exportHtmlReport() {
+  async function exportHtmlReport() {
     if (!state.parsed) return;
     const originalText = el.exportHtml.textContent;
     el.exportHtml.disabled = true;
@@ -568,7 +583,7 @@
     try {
       const html = buildHtmlReport();
       const filename = `${exportBaseName()}_${state.propulsion}_fault_environment_report.html`;
-      downloadBlob(filename, new Blob([html], { type: "text/html;charset=utf-8" }));
+      await downloadBlob(filename, new Blob([html], { type: "text/html;charset=utf-8" }));
     } catch (error) {
       console.error(error);
       window.alert("The HTML report could not be created. Refresh the analyser and try again.");
@@ -578,9 +593,9 @@
     }
   }
 
-  function runExport(action) {
+  async function runExport(action) {
     try {
-      action();
+      await action();
     } catch (error) {
       console.error(error);
       window.alert("The export could not be created. Refresh the viewer and try again.");
@@ -1817,19 +1832,19 @@
     el.detailScreen.hidden = true;
   });
 
-  el.exportHtml.addEventListener("click", exportHtmlReport);
+  el.exportHtml.addEventListener("click", () => runExport(exportHtmlReport));
 
   el.exportFaults.addEventListener("click", () => {
-    downloadCsv(`${state.fileName || "vcu"}_${state.propulsion}_faults.csv`, faultCsvRows(state.filtered));
+    runExport(() => downloadCsv(`${state.fileName || "vcu"}_${state.propulsion}_faults.csv`, faultCsvRows(state.filtered)));
   });
 
   el.exportEnv.addEventListener("click", () => {
-    downloadCsv(`${state.fileName || "vcu"}_${state.propulsion}_environment.csv`, envCsvRows(state.filtered));
+    runExport(() => downloadCsv(`${state.fileName || "vcu"}_${state.propulsion}_environment.csv`, envCsvRows(state.filtered)));
   });
 
   el.detailExport.addEventListener("click", () => {
     if (!state.selectedFault) return;
-    downloadCsv(`${state.propulsion}_${state.selectedFault.record.slNo}_${state.selectedFault.codeHex}_environment.csv`, envCsvRows([state.selectedFault]));
+    runExport(() => downloadCsv(`${state.propulsion}_${state.selectedFault.record.slNo}_${state.selectedFault.codeHex}_environment.csv`, envCsvRows([state.selectedFault])));
   });
 
   el.detailExcelExport.addEventListener("click", () => runExport(exportDetailExcel));

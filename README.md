@@ -4,7 +4,7 @@ Standalone Windows analyser for locomotive VCU diagnostic logs, developed by ELS
 
 ## Version
 
-Current release: **2.0.0**
+Current release: **3.0.0**
 
 ## Features
 
@@ -23,7 +23,7 @@ Current release: **2.0.0**
 
 Run:
 
-`release/CDAC-VCU-Fault-Analyser-Setup-2.0.0.exe`
+`release/CDAC-VCU-Fault-Analyser-Setup-3.0.0.exe`
 
 The installer creates Desktop and Start Menu shortcuts. Windows x64 is required. The installer is not code-signed, so Windows may show an Unknown Publisher warning.
 
