@@ -1612,21 +1612,39 @@
   }
 
   function faultCsvRows(faults) {
-    return [
-      ["Propulsion", "SL_No", "Date & Time", "Device_Addr", "Processor", "Env_Processor", "Fault_Index", "Info1", "Code", "Fault_Text"],
-      ...faults.map((fault) => [
-        state.propulsion,
-        fault.record.slNo,
-        fault.record.dateText,
-        fault.record.devAddr,
-        fault.record.processor,
-        fault.record.envProcessor,
-        fault.faultIndex,
-        fault.info1,
-        fault.codeHex,
-        fault.faultText
-      ])
-    ];
+    const header = ["SL_No", "Error_count", "Date & Time"];
+    for (let i = 1; i <= 16; i += 1) header.push(`Err${i}_Info2`);
+
+    const groups = new Map();
+    for (const fault of faults) {
+      const key = fault.record.slNo;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          record: fault.record,
+          faults: []
+        });
+      }
+      groups.get(key).faults.push(fault);
+    }
+
+    const rows = [...groups.values()]
+      .sort((a, b) => b.record.date - a.record.date || b.record.slNo - a.record.slNo)
+      .map((group) => {
+        const faultTexts = group.faults
+          .sort((a, b) => a.faultIndex - b.faultIndex)
+          .slice(0, 16)
+          .map((fault) => `${fault.record.processor}:${ddsCode(fault)}-${fault.faultText}`);
+        const row = [
+          group.record.slNo,
+          faultTexts.length,
+          group.record.dateText,
+          ...faultTexts
+        ];
+        while (row.length < header.length) row.push(" ");
+        return row;
+      });
+
+    return [header, ...rows];
   }
 
   function envCsvRows(faults) {
