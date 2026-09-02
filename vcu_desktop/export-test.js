@@ -1,4 +1,5 @@
 const { app, BrowserWindow, session } = require("electron");
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
@@ -8,6 +9,7 @@ let sourceWindow = null;
 let reportWindow = null;
 let finished = false;
 let viewerChecks = null;
+const CLIENT_TEMPLATE_SHA256 = "ff61d7c3c5c423c04997432788dbba945d1bc8fbc73705c518c840c412edfb86";
 
 function finish(code, message) {
   if (finished) return;
@@ -36,9 +38,63 @@ function waitFor(condition, timeoutMs = 30000) {
   });
 }
 
-async function verifyReport(reportPath) {
+function canonicalReportTemplate(html) {
+  const normalized = html.replace(/\r\n/g, "\n");
+  const marker = "const FAULT_DATA = ";
+  const markerIndex = normalized.indexOf(marker);
+  const dataStart = normalized.indexOf("[", markerIndex + marker.length);
+  if (markerIndex < 0 || dataStart < 0) throw new Error("Generated report has no FAULT_DATA array");
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let dataEnd = -1;
+  for (let index = dataStart; index < normalized.length; index += 1) {
+    const character = normalized[index];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') inString = false;
+      continue;
+    }
+    if (character === '"') inString = true;
+    else if (character === "[") depth += 1;
+    else if (character === "]") {
+      depth -= 1;
+      if (depth === 0) {
+        dataEnd = index;
+        break;
+      }
+    }
+  }
+  if (dataEnd < 0) throw new Error("Generated report has an unterminated FAULT_DATA array");
+
+  return (normalized.slice(0, dataStart) + "__FAULT_DATA__" + normalized.slice(dataEnd + 1))
+    .replace(/<title>(?:ABB|CGL) Fault Report<\/title>/, "<title>PROPULSION Fault Report</title>")
+    .replace(
+      /<div class="header">(?:ABB|CGL) Diagnostic Report \(Formal Data View\)<\/div>/,
+      '<div class="header">PROPULSION Diagnostic Report (Formal Data View)</div>'
+    );
+}
+
+function expectedReportFilename(sourcePath) {
+  const baseName = path.basename(sourcePath, path.extname(sourcePath));
+  const locoNumber = baseName.match(/\d{5,6}/);
+  return `${locoNumber ? locoNumber[0] : baseName}.html`;
+}
+
+async function verifyReport(reportPath, downloadedFilename) {
   const stats = fs.statSync(reportPath);
   if (stats.size < 10000) throw new Error("Generated HTML report is unexpectedly small");
+  const reportHtml = fs.readFileSync(reportPath, "utf8");
+  const hasCompactClientJson = /const FAULT_DATA = \[\{"id":1,"device":/.test(reportHtml);
+  const crlfCount = (reportHtml.match(/\r\n/g) || []).length;
+  const hasWindowsLineEndings = crlfCount > 0 && !/(^|[^\r])\n|\r(?!\n)/.test(reportHtml);
+  const underDecimal10MB = stats.size < 10000000;
+  const templateHash = crypto.createHash("sha256")
+    .update(canonicalReportTemplate(reportHtml), "utf8")
+    .digest("hex");
+  const expectedFilename = expectedReportFilename(samplePath);
 
   reportWindow = new BrowserWindow({
     show: false,
@@ -66,6 +122,11 @@ async function verifyReport(reportPath) {
 
   const expectedFields = "id,device,date_time,msg,has_env,bg_items,ag_items,bp_items,ap_items";
   const passed = /^(ABB|CGL) Diagnostic Report \(Formal Data View\)$/.test(result.heading)
+    && templateHash === CLIENT_TEMPLATE_SHA256
+    && hasCompactClientJson
+    && hasWindowsLineEndings
+    && underDecimal10MB
+    && downloadedFilename === expectedFilename
     && result.reportFaults > 0
     && result.schemaFields === expectedFields
     && result.validClientDate
@@ -74,12 +135,22 @@ async function verifyReport(reportPath) {
     && result.renderedEnvironmentTables === result.expectedEnvironmentTables
     && result.activeFaultRows === 1
     && result.firstFaultDDS.length > 0;
-  if (!passed) throw new Error(`Generated report verification failed: ${JSON.stringify(result)}`);
+  const compatibility = {
+    templateHash,
+    expectedTemplateHash: CLIENT_TEMPLATE_SHA256,
+    hasCompactClientJson,
+    hasWindowsLineEndings,
+    crlfCount,
+    underDecimal10MB,
+    downloadedFilename,
+    expectedFilename
+  };
+  if (!passed) throw new Error(`Generated report verification failed: ${JSON.stringify({ ...result, ...compatibility })}`);
   reportWindow.setSize(1600, 900);
   const screenshotPath = reportPath.replace(/\.html$/i, ".png");
   const screenshot = await reportWindow.webContents.capturePage();
   fs.writeFileSync(screenshotPath, screenshot.toPNG());
-  return { ...result, viewerChecks, reportBytes: stats.size, reportPath, screenshotPath };
+  return { ...result, ...compatibility, viewerChecks, reportBytes: stats.size, reportPath, screenshotPath };
 }
 
 app.whenReady().then(async () => {
@@ -90,6 +161,7 @@ app.whenReady().then(async () => {
 
     const outputPath = path.join(app.getPath("temp"), `cdac-vcu-html-export-${Date.now()}.html`);
     session.defaultSession.once("will-download", (_event, item) => {
+      const downloadedFilename = item.getFilename();
       item.setSavePath(outputPath);
       item.once("done", async (_downloadEvent, state) => {
         if (state !== "completed") {
@@ -97,7 +169,7 @@ app.whenReady().then(async () => {
           return;
         }
         try {
-          const result = await verifyReport(outputPath);
+          const result = await verifyReport(outputPath, downloadedFilename);
           finish(0, JSON.stringify(result));
         } catch (error) {
           finish(1, error.stack || error.message);

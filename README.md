@@ -14,8 +14,10 @@ Current release: **3.0.0**
 - Provides a fault count matrix and multi-parameter depth analysis.
 - Adds per-column depth-analysis search, TRUE/FALSE selection, numeric comparisons, and ascending/descending sorting; filtered order is preserved in Excel/PDF exports.
 - Exports CSV, Excel, PDF, and a standalone interactive HTML fault report.
-- HTML reports use the client-compatible `FAULT_DATA` schema:
+- HTML reports mirror the canonical client template line for line and use the client-compatible `FAULT_DATA` schema:
   `id`, `device`, `date_time`, `msg`, `has_env`, `bg_items`, `ag_items`, `bp_items`, `ap_items`.
+- HTML reports use compact JSON and Windows CRLF line endings for compatibility with size-limited and line-ending-sensitive client software.
+- HTML downloads use only the 5- or 6-digit locomotive number from the source filename (for example, `35017.html`).
 - Runs as a self-contained Electron desktop application with no Python runtime or local server.
 - Clears the embedded browser cache on every application launch.
 

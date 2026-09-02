@@ -142,6 +142,12 @@
     return (state.fileName || "vcu_log").replace(/\.[^.]+$/, "");
   }
 
+  function htmlReportBaseName() {
+    const baseName = exportBaseName();
+    const locoNumber = baseName.match(/\d{5,6}/);
+    return locoNumber ? locoNumber[0] : baseName;
+  }
+
   function reportEnvironmentValues(rows) {
     return rows.map((row) => [row.process || "", row.signal || "", row.value || ""]);
   }
@@ -200,379 +206,401 @@
       .replace(/'/g, "&#39;");
   }
 
+  function clientReportJson(value) {
+    return JSON.stringify(value).replace(
+      /[\u007f-\uffff]/g,
+      (character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`
+    );
+  }
+
   function buildHtmlReport() {
     const report = buildHtmlReportData();
-    const serialized = JSON.stringify(report.faults)
-      .replace(/</g, "\\u003c")
-      .replace(/>/g, "\\u003e")
-      .replace(/&/g, "\\u0026")
-      .replace(/\u2028/g, "\\u2028")
-      .replace(/\u2029/g, "\\u2029");
+    const serialized = clientReportJson(report.faults);
     const title = `${report.propulsion} Fault Report`;
-    return `<!doctype html>
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${htmlText(title)}</title>
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f4f5f7;
-      color: #333;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .header {
-      background-color: #003366;
-      color: white;
-      padding: 12px 20px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      z-index: 10;
-      flex-shrink: 0;
-    }
-    .main-container {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-    .pane {
-      flex: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      padding: 15px;
-    }
-    .pane-left {
-      border-right: 4px solid #ccd2d9;
-      background-color: #fff;
-      width: 40%;
-      flex: none;
-      resize: horizontal;
-      min-width: 20%;
-      max-width: 80%;
-    }
-    .pane-right {
-      background-color: #f4f5f7;
-    }
-    .toolbar {
-      padding-bottom: 12px;
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-    .toolbar input {
-      padding: 6px 12px;
-      width: 350px;
-      border: 1px solid #aebac6;
-      border-radius: 3px;
-      font-size: 0.95rem;
-    }
-    .toolbar input:focus {
-      outline: none;
-      border-color: #003366;
-      box-shadow: 0 0 3px rgba(0, 51, 102, 0.5);
-    }
-    .table-container {
-      flex: 1;
-      overflow-y: auto;
-      border: 1px solid #aebac6;
-      background: #fff;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-    th, td {
-      padding: 6px 10px;
-      border: 1px solid #d5dbe0;
-      text-align: left;
-      white-space: nowrap;
-      vertical-align: top;
-    }
-    th {
-      background-color: #e4e9f0;
-      color: #003366;
-      position: sticky;
-      top: 0;
-      cursor: pointer;
-      user-select: none;
-      font-weight: bold;
-      z-index: 5;
-      resize: horizontal;
-      overflow: auto;
-    }
-    th:hover {
-      background-color: #d1dae3;
-    }
-    tr:hover td {
-      background-color: #f0f4f8;
-      cursor: pointer;
-    }
-    tr.active td {
-      background-color: #cce0ff !important;
-    }
-    .bg-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 15px;
-      overflow-y: auto;
-      flex: 1;
-      box-sizing: border-box;
-    }
-    .bg-table-card {
-      border: 1px solid #aebac6;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      min-height: 0;
-    }
-    .bg-table-header {
-      background-color: #003366;
-      color: white;
-      padding: 8px 12px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      flex-shrink: 0;
-      display: flex;
-      justify-content: space-between;
-    }
-    .bg-table-wrapper {
-      overflow-y: auto;
-      flex: 1;
-    }
-    .bg-table-wrapper th {
-      background-color: #f0f4f8;
-      color: #333;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .bg-table-wrapper tr:hover td {
-      background-color: #fff;
-      cursor: default;
-    }
-    .empty-state {
-      padding: 30px;
-      text-align: center;
-      color: #555;
-      grid-column: 1 / -1;
-      font-style: italic;
-    }
-    .val-true { color: #008000; font-weight: bold; }
-    .val-false { color: #666; }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
-    ::-webkit-scrollbar-thumb { background: #bcc5ce; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #99a5b3; }
-    @media (max-width:900px) {
-      body { overflow: auto; }
-      .main-container { min-height: 1200px; flex-direction: column; overflow: visible; }
-      .pane-left { width: auto; min-width: 0; max-width: none; height: 45vh; resize: none; border-right: 0; border-bottom: 4px solid #ccd2d9; }
-      .toolbar { flex-direction: column; align-items: stretch; gap: 8px; }
-      .toolbar input { width: auto !important; }
-      .bg-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 280px); overflow: visible; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${htmlText(title)}</title>
+    <style>
+        body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            background-color: #f4f5f7; 
+            color: #333; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+        .header { 
+            background-color: #003366; 
+            color: white; 
+            padding: 12px 20px; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .pane { 
+            flex: 1; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 15px; 
+        }
+        .pane-left { 
+            border-right: 4px solid #ccd2d9;
+            background-color: #fff;
+            width: 40%;
+            flex: none;
+            resize: horizontal;
+            min-width: 20%;
+            max-width: 80%;
+        }
+        .pane-right { 
+            background-color: #f4f5f7;
+        }
+        .toolbar { 
+            padding-bottom: 12px; 
+            display: flex; 
+            gap: 15px; 
+            align-items: center;
+        }
+        .toolbar input { 
+            padding: 6px 12px; 
+            width: 350px; 
+            border: 1px solid #aebac6; 
+            border-radius: 3px;
+            font-size: 0.95rem;
+        }
+        .toolbar input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 3px rgba(0, 51, 102, 0.5);
+        }
+        
+        .table-container { 
+            flex: 1; 
+            overflow-y: auto; 
+            border: 1px solid #aebac6; 
+            background: #fff; 
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.85rem; 
+        }
+        th, td { 
+            padding: 6px 10px; 
+            border: 1px solid #d5dbe0; 
+            text-align: left; 
+            white-space: nowrap;
+        }
+        th { 
+            background-color: #e4e9f0; 
+            color: #003366;
+            position: sticky; 
+            top: 0; 
+            cursor: pointer; 
+            user-select: none; 
+            font-weight: bold;
+            z-index: 5;
+            resize: horizontal;
+            overflow: auto;
+        }
+        th:hover { 
+            background-color: #d1dae3; 
+        }
+        tr:hover td { 
+            background-color: #f0f4f8; 
+            cursor: pointer; 
+        }
+        tr.active td { 
+            background-color: #cce0ff !important; 
+        }
+        
+        .bg-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            grid-template-rows: 1fr 1fr;
+            gap: 15px; 
+            overflow-y: auto; 
+            flex: 1;
+            box-sizing: border-box; 
+        }
+        .bg-table-card { 
+            border: 1px solid #aebac6; 
+            display: flex; 
+            flex-direction: column; 
+            background: #fff; 
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            min-height: 0; /* Important for grid item scrolling */
+        }
+        .bg-table-header { 
+            background-color: #003366; 
+            color: white; 
+            padding: 8px 12px; 
+            font-weight: bold; 
+            font-size: 0.85rem; 
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .bg-table-wrapper { 
+            overflow-y: auto; 
+            flex: 1;
+        }
+        .bg-table-wrapper th { 
+            background-color: #f0f4f8; 
+            color: #333;
+            cursor: pointer; 
+            font-weight: 600;
+        }
+        .bg-table-wrapper tr:hover td { 
+            background-color: #fff; 
+            cursor: default; 
+        }
+        
+        .empty-state { 
+            padding: 30px; 
+            text-align: center; 
+            color: #555; 
+            grid-column: 1 / -1; 
+            font-style: italic;
+        }
+        
+        .val-true { color: #008000; font-weight: bold; }
+        .val-false { color: #666; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #bcc5ce; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #99a5b3; }
+    </style>
 </head>
 <body>
-  <div class="header">${htmlText(report.propulsion)} Diagnostic Report (Formal Data View)</div>
-  <div class="main-container">
-    <div class="pane pane-left">
-      <div class="toolbar">
-        <input type="text" id="searchInput" placeholder="Filter faults by Device, Date, Time, or Message..." onkeyup="filterFaults()">
-        <span id="faultCount" style="font-size: 0.9rem; color: #555; font-weight: bold;"></span>
-      </div>
-      <div class="table-container">
-        <table id="faultTable">
-          <thead>
-            <tr>
-              <th onclick="sortTable(0, 'num')">No. &#x21C5;</th>
-              <th onclick="sortTable(1, 'str')">Device &#x21C5;</th>
-              <th onclick="sortTable(2, 'str')">Date Time &#x21C5;</th>
-              <th onclick="sortTable(3, 'str')">Message &#x21C5;</th>
-            </tr>
-          </thead>
-          <tbody id="faultListBody"></tbody>
-        </table>
-      </div>
+
+    <div class="header">${htmlText(report.propulsion)} Diagnostic Report (Formal Data View)</div>
+    
+    <div class="main-container">
+        <!-- Left Pane: Fault List -->
+        <div class="pane pane-left">
+            <div class="toolbar">
+                <input type="text" id="searchInput" placeholder="Filter faults by Device, Date, Time, or Message..." onkeyup="filterFaults()">
+                <span id="faultCount" style="font-size: 0.9rem; color: #555; font-weight: bold;"></span>
+            </div>
+            <div class="table-container">
+                <table id="faultTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0, 'num')">No. &#x21C5;</th>
+                            <th onclick="sortTable(1, 'str')">Device &#x21C5;</th>
+                            <th onclick="sortTable(2, 'str')">Date Time &#x21C5;</th>
+                            <th onclick="sortTable(3, 'str')">Message &#x21C5;</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faultListBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Right Pane: Background Data -->
+        <div class="pane pane-right">
+            <div class="toolbar">
+                <input type="text" id="bgSearchInput" placeholder="Filter background data (Process Value, Name, Value)..." onkeyup="filterBgData()" style="width: 100%;">
+            </div>
+            <div class="bg-grid" id="bgGrid">
+                <div class="empty-state">Select a fault record on the left to view its environmental background data.</div>
+            </div>
+        </div>
     </div>
-    <div class="pane pane-right">
-      <div class="toolbar">
-        <input type="text" id="bgSearchInput" placeholder="Filter background data (Process Value, Name, Value)..." onkeyup="filterBgData()" style="width: 100%;">
-      </div>
-      <div class="bg-grid" id="bgGrid">
-        <div class="empty-state">Select a fault record on the left to view its environmental background data.</div>
-      </div>
-    </div>
-  </div>
-  <script>
-    const FAULT_DATA = ${serialized};
-    const tbody = document.getElementById("faultListBody");
-    const faultCount = document.getElementById("faultCount");
-    const bgGrid = document.getElementById("bgGrid");
-    const bgSearchInput = document.getElementById("bgSearchInput");
-    let sortCol = -1;
-    let sortAsc = true;
-    const bgSortStates = {};
+    
+    <script>
+        const FAULT_DATA = ${serialized};
+        const tbody = document.getElementById('faultListBody');
+        
+        let sortCol = -1;
+        let sortAsc = true;
+        
+        // Background tables sort state tracking
+        let bgSortStates = {};
 
-    function escapeText(value) {
-      return String(value == null ? "" : value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function init() {
-      renderTable(FAULT_DATA);
-      updateCount(FAULT_DATA.length);
-    }
-
-    function updateCount(count) {
-      faultCount.textContent = count.toLocaleString("en-IN") + " fault records found";
-    }
-
-    function renderTable(data) {
-      tbody.innerHTML = "";
-      data.forEach(function(fault) {
-        const row = document.createElement("tr");
-        row.dataset.faultId = String(fault.id);
-        row.innerHTML = "<td>" + escapeText(fault.id) + "</td>"
-          + "<td>" + escapeText(fault.device) + "</td>"
-          + "<td>" + escapeText(fault.date_time) + "</td>"
-          + '<td style="white-space: normal;">' + escapeText(fault.msg) + "</td>";
-        row.onclick = function() { selectFault(row, fault); };
-        tbody.appendChild(row);
-      });
-    }
-
-    function filterFaults() {
-      const query = document.getElementById("searchInput").value.toLowerCase();
-      const filtered = FAULT_DATA.filter(function(fault) {
-        return [fault.id, fault.device, fault.date_time, fault.msg]
-          .some(function(value) { return String(value == null ? "" : value).toLowerCase().includes(query); });
-      });
-      renderTable(filtered);
-      updateCount(filtered.length);
-      bgGrid.innerHTML = '<div class="empty-state">Select a fault record on the left to view its environmental background data.</div>';
-      bgSearchInput.value = "";
-    }
-
-    function filterBgData() {
-      const query = bgSearchInput.value.toLowerCase();
-      document.querySelectorAll(".bg-table-wrapper tbody").forEach(function(body) {
-        body.querySelectorAll("tr").forEach(function(row) {
-          row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
-        });
-      });
-    }
-
-    function sortTable(colIdx, type) {
-      if (sortCol === colIdx) sortAsc = !sortAsc;
-      else {
-        sortCol = colIdx;
-        sortAsc = true;
-      }
-      const currentData = Array.from(tbody.querySelectorAll("tr")).map(function(row) {
-        const id = Number(row.dataset.faultId || row.cells[0].innerText);
-        return FAULT_DATA.find(function(fault) { return fault.id === id; });
-      }).filter(Boolean);
-      currentData.sort(function(a, b) {
-        const left = colIdx === 0 ? a.id : colIdx === 1 ? a.device : colIdx === 2 ? a.date_time : a.msg;
-        const right = colIdx === 0 ? b.id : colIdx === 1 ? b.device : colIdx === 2 ? b.date_time : b.msg;
-        if (type === "num") return sortAsc ? left - right : right - left;
-        return sortAsc
-          ? String(left).localeCompare(String(right), undefined, { numeric: true })
-          : String(right).localeCompare(String(left), undefined, { numeric: true });
-      });
-      renderTable(currentData);
-    }
-
-    function sortBgTable(tableId, colIdx) {
-      const table = document.getElementById(tableId);
-      const body = table.querySelector("tbody");
-      const rows = Array.from(body.querySelectorAll("tr"));
-      if (!bgSortStates[tableId]) bgSortStates[tableId] = { col: -1, asc: true };
-      if (bgSortStates[tableId].col === colIdx) {
-        bgSortStates[tableId].asc = !bgSortStates[tableId].asc;
-      } else {
-        bgSortStates[tableId].col = colIdx;
-        bgSortStates[tableId].asc = true;
-      }
-      const asc = bgSortStates[tableId].asc;
-      rows.sort(function(a, b) {
-        const left = a.cells[colIdx].innerText;
-        const right = b.cells[colIdx].innerText;
-        const leftNumber = Number.parseFloat(left);
-        const rightNumber = Number.parseFloat(right);
-        if (!Number.isNaN(leftNumber) && !Number.isNaN(rightNumber)) {
-          return asc ? leftNumber - rightNumber : rightNumber - leftNumber;
+        function init() {
+            renderTable(FAULT_DATA);
+            updateCount(FAULT_DATA.length);
         }
-        return asc
-          ? left.localeCompare(right, undefined, { numeric: true })
-          : right.localeCompare(left, undefined, { numeric: true });
-      });
-      body.innerHTML = "";
-      rows.forEach(function(row) { body.appendChild(row); });
-    }
-
-    function formatVal(value) {
-      const text = escapeText(value);
-      if (value === "TRUE") return '<span class="val-true">TRUE</span>';
-      if (value === "FALSE") return '<span class="val-false">FALSE</span>';
-      return text;
-    }
-
-    function selectFault(row, fault) {
-      Array.from(tbody.querySelectorAll("tr")).forEach(function(item) {
-        item.classList.remove("active");
-      });
-      row.classList.add("active");
-      bgSearchInput.value = "";
-      if (!fault.has_env) {
-        bgGrid.innerHTML = '<div class="empty-state">No background data available for this fault.</div>';
-        return;
-      }
-      let html = "";
-      html += renderBgTable("bg_t1", "Binary Global Process Values", ["ProcessValue", "SignalName", "Value"], fault.bg_items);
-      html += renderBgTable("bg_t2", "Analog Global Process Values", ["ProcessValue", "SignalName", "SignalValue"], fault.ag_items);
-      html += renderBgTable("bg_t3", "Binary Processor Specific Process Values", ["ProcessValue", "SignalName", "Value"], fault.bp_items);
-      html += renderBgTable("bg_t4", "Analog Processor Specific Process Values", ["ProcessValue", "SignalName", "SignalValue"], fault.ap_items);
-      bgGrid.innerHTML = html || '<div class="empty-state">No mapped data available for this fault.</div>';
-    }
-
-    function renderBgTable(tableId, title, columns, rows) {
-      if (!rows || !rows.length) return "";
-      const headings = columns.map(function(column, index) {
-        return '<th onclick="sortBgTable(\\'' + tableId + '\\', ' + index + ')">' + escapeText(column) + " &#x21C5;</th>";
-      }).join("");
-      const body = rows.map(function(row) {
-        return "<tr>" + row.map(function(cell) {
-          return "<td>" + formatVal(cell) + "</td>";
-        }).join("") + "</tr>";
-      }).join("");
-      return '<div class="bg-table-card">'
-        + '<div class="bg-table-header">' + escapeText(title) + "</div>"
-        + '<div class="bg-table-wrapper">'
-        + '<table id="' + tableId + '"><thead><tr>' + headings + '</tr></thead><tbody>' + body + "</tbody></table>"
-        + "</div></div>";
-    }
-
-    init();
-  </script>
+        
+        function updateCount(count) {
+            document.getElementById('faultCount').textContent = count + " fault records found";
+        }
+        
+        function renderTable(data) {
+            tbody.innerHTML = '';
+            data.forEach((f) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = \`<td>\${f.id}</td><td>\${f.device}</td><td>\${f.date_time}</td><td style="white-space: normal;">\${f.msg}</td>\`;
+                tr.onclick = () => selectFault(tr, f);
+                tbody.appendChild(tr);
+            });
+        }
+        
+        function filterFaults() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = FAULT_DATA.filter(f => 
+                f.device.toLowerCase().includes(input) || 
+                f.date_time.toLowerCase().includes(input) || 
+                f.msg.toLowerCase().includes(input) ||
+                f.id.toString().includes(input)
+            );
+            renderTable(filtered);
+            updateCount(filtered.length);
+            document.getElementById('bgGrid').innerHTML = '<div class="empty-state">Select a fault record on the left to view its environmental background data.</div>';
+            document.getElementById('bgSearchInput').value = '';
+        }
+        
+        function filterBgData() {
+            let input = document.getElementById('bgSearchInput').value.toLowerCase();
+            let wrappers = document.querySelectorAll('.bg-table-wrapper tbody');
+            wrappers.forEach(body => {
+                let rows = body.querySelectorAll('tr');
+                rows.forEach(row => {
+                    let text = row.innerText.toLowerCase();
+                    if (text.includes(input)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        function sortTable(colIdx, type) {
+            if(sortCol === colIdx) sortAsc = !sortAsc;
+            else { sortCol = colIdx; sortAsc = true; }
+            
+            let currentData = Array.from(tbody.querySelectorAll('tr')).map(tr => {
+                let id = parseInt(tr.cells[0].innerText);
+                return FAULT_DATA.find(f => f.id === id);
+            });
+            
+            currentData.sort((a, b) => {
+                let valA, valB;
+                if(colIdx === 0) { valA = a.id; valB = b.id; }
+                else if(colIdx === 1) { valA = a.device; valB = b.device; }
+                else if(colIdx === 2) { valA = a.date_time; valB = b.date_time; }
+                else { valA = a.msg; valB = b.msg; }
+                
+                if (type === 'num') {
+                    return sortAsc ? valA - valB : valB - valA;
+                } else {
+                    if (valA < valB) return sortAsc ? -1 : 1;
+                    if (valA > valB) return sortAsc ? 1 : -1;
+                    return 0;
+                }
+            });
+            
+            renderTable(currentData);
+        }
+        
+        function sortBgTable(tableId, colIdx) {
+            let table = document.getElementById(tableId);
+            let tbody = table.querySelector('tbody');
+            let rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            if (!bgSortStates[tableId]) bgSortStates[tableId] = { col: -1, asc: true };
+            
+            if (bgSortStates[tableId].col === colIdx) {
+                bgSortStates[tableId].asc = !bgSortStates[tableId].asc;
+            } else {
+                bgSortStates[tableId].col = colIdx;
+                bgSortStates[tableId].asc = true;
+            }
+            
+            let asc = bgSortStates[tableId].asc;
+            
+            rows.sort((a, b) => {
+                let valA = a.cells[colIdx].innerText;
+                let valB = b.cells[colIdx].innerText;
+                
+                // Try numeric sort first
+                let numA = parseFloat(valA);
+                let numB = parseFloat(valB);
+                
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return asc ? numA - numB : numB - numA;
+                }
+                
+                if (valA < valB) return asc ? -1 : 1;
+                if (valA > valB) return asc ? 1 : -1;
+                return 0;
+            });
+            
+            tbody.innerHTML = '';
+            rows.forEach(r => tbody.appendChild(r));
+        }
+        
+        function formatVal(val) {
+            if (val === 'TRUE') return \`<span class="val-true">TRUE</span>\`;
+            if (val === 'FALSE') return \`<span class="val-false">FALSE</span>\`;
+            return val;
+        }
+        
+        function selectFault(tr, fault) {
+            Array.from(tbody.querySelectorAll('tr')).forEach(r => r.classList.remove('active'));
+            tr.classList.add('active');
+            document.getElementById('bgSearchInput').value = '';
+            
+            if (!fault.has_env) {
+                document.getElementById('bgGrid').innerHTML = '<div class="empty-state">No background data available for this fault.</div>';
+                return;
+            }
+            
+            let html = '';
+            html += renderBgTable('bg_t1', 'Binary Global Process Values', ['ProcessValue', 'SignalName', 'Value'], fault.bg_items);
+            html += renderBgTable('bg_t2', 'Analog Global Process Values', ['ProcessValue', 'SignalName', 'SignalValue'], fault.ag_items);
+            html += renderBgTable('bg_t3', 'Binary Processor Specific Process Values', ['ProcessValue', 'SignalName', 'Value'], fault.bp_items);
+            html += renderBgTable('bg_t4', 'Analog Processor Specific Process Values', ['ProcessValue', 'SignalName', 'SignalValue'], fault.ap_items);
+            
+            if (html === '') {
+                html = '<div class="empty-state">No mapped data available for this fault.</div>';
+            }
+            document.getElementById('bgGrid').innerHTML = html;
+        }
+        
+        function renderBgTable(tableId, title, cols, rows) {
+            if(!rows || rows.length === 0) return '';
+            let ths = cols.map((c, i) => \`<th onclick="sortBgTable('\${tableId}', \${i})">\${c} &#x21C5;</th>\`).join('');
+            let trs = rows.map(r => \`<tr>\${r.map(c => \`<td>\${formatVal(c)}</td>\`).join('')}</tr>\`).join('');
+            return \`
+                <div class="bg-table-card">
+                    <div class="bg-table-header">\${title}</div>
+                    <div class="bg-table-wrapper">
+                        <table id="\${tableId}">
+                            <thead><tr>\${ths}</tr></thead>
+                            <tbody>\${trs}</tbody>
+                        </table>
+                    </div>
+                </div>
+            \`;
+        }
+        
+        init();
+    </script>
 </body>
-</html>`;
+</html>
+`;
   }
 
   async function exportHtmlReport() {
@@ -581,8 +609,8 @@
     el.exportHtml.disabled = true;
     el.exportHtml.textContent = "Preparing...";
     try {
-      const html = buildHtmlReport();
-      const filename = `${exportBaseName()}_${state.propulsion}_fault_environment_report.html`;
+      const html = buildHtmlReport().replace(/\r?\n/g, "\r\n");
+      const filename = `${htmlReportBaseName()}.html`;
       await downloadBlob(filename, new Blob([html], { type: "text/html;charset=utf-8" }));
     } catch (error) {
       console.error(error);
