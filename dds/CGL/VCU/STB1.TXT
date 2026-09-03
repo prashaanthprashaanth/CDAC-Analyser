@@ -54,4 +54,6 @@ $
 #13
 STB1:0013-BPCS is Stuck ON
 $
-
+#14
+STB1:0014-Water closet open
+$

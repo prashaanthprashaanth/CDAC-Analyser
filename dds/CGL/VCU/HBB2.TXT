@@ -31,5 +31,5 @@ $
 HBB2:0005-MCB of compressor 2 open
 $
 #18
-HBB2:0018-Capacitor MR-blower not off
+HBB2:0018-Auto Flasher light Activated
 $

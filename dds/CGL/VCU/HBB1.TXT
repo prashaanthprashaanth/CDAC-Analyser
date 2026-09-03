@@ -64,5 +64,5 @@ $
 HBB1:0016-Loco in banking operation
 $
 #18
-HBB1:0018-Capacitor MR-blower not off
+HBB1:0018-Auto Flasher light Activated
 $

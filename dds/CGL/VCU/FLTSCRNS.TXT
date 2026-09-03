@@ -1,6 +1,6 @@
 /*---------------------------------------------------------------------------
  *	File Name			: FLTSCRNS.TXT
- *	Version Number			: V2.1
+ *	Version Number			: V2.0
  *	Project Code			: PEG084D
  *	Project Name / Mnemonic		: VCU & TCN for Rolling Stock Applications
  *	Product Name			: VCU
@@ -13,8 +13,6 @@
  *---------------------------------------------------------------------------
  * v2.0(23.01.2018)
  * Version changed, but no changes in file
- * v2.1(22.06.2018)
- * Edited for dynamically handling the loco number
  *---------------------------------------------------------------------------
  */
 #1
@@ -51,6 +49,11 @@ $
 Information 006
 PANTO RAISING
 Please wait ...
+
+$
+#7
+Information 007
+Energy Saving activated
 
 $
 #00100
@@ -151,7 +154,7 @@ Wait 1 minute and set TE/BE again
 $
 #20106
  SS01:Main power
-AUX. CAPACITOR MACH.RM. BLOW.MOT. NOT OFF
+AUTO FLASHER LIGHT ACTIVATED
 Normal operation can continue
 To be checked during maintenance  F0106P2
 $
@@ -369,22 +372,19 @@ $
  SS04:Traction bogie1
 Motor1-Bogie1 Isolated                    
 Reduced Traction/Braking
-                 
-                            F0403P2
+                                F0403P2
 $ 
 #20404
  SS04:Traction bogie1
 Motor2-Bogie1 Isolated                    
 Reduced Traction/Braking
-                 
-                            F0404P2
+                                F0404P2
 $ 
 #20405
  SS04:Traction bogie1
 Motor3-Bogie1 Isolated                    
 Reduced Traction/Braking
-                 
-                            F0405P2
+                                F0405P2
 $
 #20406 
   SS04:Traction bogie1
@@ -408,46 +408,43 @@ $
  SS05:Hotel load
 EARTH FAULT IN HOTEL LOAD CIRCUIT
 Hotel load will be isolated
-					F0503P1
+                        F0503P1
 $
 #10504
  SS05:Hotel load
 OVERCURRENT IN HOTEL LOAD CIRCUIT
 Try to close the VCB again
-					F0504P1
+			F0504P1
 $
 #20501
  SS05:Hotel load
 HOTEL LOAD CONTACTOR STUCK OFF
 Hotel load not available
-				  F0501P2
+			  F0501P2
 $
 #20502
  SS05:Hotel load
 HOTEL LOAD CONTACTOR STUCK ON
 For un/coupling hotel load trip VCB
-					  F0502P2
+			  F0502P2
 $
 #20503
  SS05:Traction bogie2
 Motor1-Bogie2 Isolated                    
 Reduced Traction/Braking
-                 
-                            F0503P2
+                         F0503P2
 $ 
 #20504
  SS05:Traction bogie2
 Motor2-Bogie2 Isolated                    
 Reduced Traction/Braking
-                 
-                            F0504P2
+                         F0504P2
 $
 #20505
  SS05:Traction bogie2
 Motor3-Bogie2 Isolated                    
 Reduced Traction/Braking
-                 
-                            F0505P2
+                         F0505P2
 $
 #20506 
   SS04:Traction bogie2
@@ -471,7 +468,7 @@ $
  SS06:Aux. converter 1
 DISTURBANCE IN PROCESSOR BUR1
 Try to close the VCB again
-					 F0601P1
+			 F0601P1
 $
 #10602
  SS06:Aux. converter 1
@@ -500,14 +497,13 @@ $
 #10701
  SS07:Aux. converter 2
 DISTURBANCE IN PROCESSOR BUR2
-Try to close the VCB again
-					 F0701P1
+Try to close the VCB again	 F0701P1
 $
 #10702
  SS07:Aux. converter 2
 FAULT IN AUXILIARY CONVERTER 2
 Try to close the VCB again
-					 F0702P1
+                         F0702P1
 $
 #10703
  SS07:Aux. converter 2
@@ -722,13 +718,13 @@ $
 #11301
  SS13:Cab 1
 DISTURBANCE IN PROCESSOR HBB1
-Cab 1 may get isolated; Drive from Cab 2
+Cab 1 may not get isolated; Drive from Cab 1
 REFER TO DRIVER'S MANUAL      F1301P1
 $
 #11302
  SS13:Cab 1
 DISTURBANCE IN PROCESSOR STB1
-Cab 1 may get isolated; Drive from Cab 2
+Cab 1 may not get isolated; Drive from Cab 1
 REFER TO DRIVER'S MANUAL      F1302P1
 $
 #11303
@@ -746,13 +742,13 @@ $
 #11401
  SS14:Cab 2
 DISTURBANCE IN PROCESSOR HBB2
-Cab 2 may get isolated; Drive from Cab 1
+Cab 2 may not get isolated; Drive from Cab 2
 REFER TO DRIVER'S MANUAL       F1401P1
 $
 #11402
  SS14:Cab 2
 DISTURBANCE IN PROCESSOR STB2
-Cab 2 may get isolated; Drive from Cab 1
+Cab 2 may not get isolated; Drive from Cab 2
 REFER TO DRIVER'S MANUAL       F1402P1
 $
 #11403
@@ -790,6 +786,12 @@ $
 FAULT IN SPEEDOMETER
 No display of speed in the cab
 Drive carfully, use diagn.screen F1601P2
+$
+#21602
+ SS16:Speedometer
+RS INTERLOCK
+NO TRACTION POSSIBLE WITH USE OF WATERCLOSET
+CLOSE THE WATERCLOSET TO DRIVE, use diagn.screen F1602P2
 $
 #01700
  SS17:Processor FLG1
