@@ -4,7 +4,7 @@ Standalone Windows analyser for locomotive VCU diagnostic logs, developed by ELS
 
 ## Version
 
-Current release: **4.0.0**
+Current release: **5.0.0**
 
 ## Features
 
@@ -19,30 +19,31 @@ Current release: **4.0.0**
   `id`, `device`, `date_time`, `msg`, `has_env`, `bg_items`, `ag_items`, `bp_items`, `ap_items`.
 - HTML reports use compact JSON and Windows CRLF line endings for compatibility with size-limited and line-ending-sensitive client software.
 - HTML downloads use only the 5- or 6-digit locomotive number from the source filename (for example, `35017.html`).
-- Runs as a self-contained Electron desktop application with no Python runtime or local server.
+- Keeps the familiar v4 interface inside a lightweight Windows application window; it does not open a separate browser.
+- Uses the Microsoft Edge WebView2 Runtime already shared by Windows, with no Python runtime or local server.
 - Clears the embedded browser cache on every application launch.
 
 ## Install
 
 Run:
 
-`release/CDAC-VCU-Fault-Analyser-Setup-4.0.0.exe`
+`release/CDAC-VCU-Fault-Analyser-Setup-5.0.0.exe`
 
-The installer creates Desktop and Start Menu shortcuts. Windows x64 is required. The installer is not code-signed, so Windows may show an Unknown Publisher warning.
+The installer replaces an existing v2, v3, or v4 installation and creates Desktop and Start Menu shortcuts. Windows 10/11 x64 with Microsoft Edge WebView2 Runtime and .NET Framework 4.8 is required. The installer is not code-signed, so Windows may show an Unknown Publisher warning.
 
 ## Development
 
 Requirements:
 
-- Node.js and npm
+- .NET Framework 4.8 developer tools
+- NSIS 3
+- Internet access on the first build to download the checksum-pinned WebView2 SDK
 - Python 3 only when regenerating `dictionaries.js`
 
 Build the Windows installer:
 
 ```powershell
-cd vcu_desktop
-npm ci
-npm run dist
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File vcu_webview2\build.ps1
 ```
 
 Regenerate ABB/CGL and environment dictionaries from the included sources:
@@ -56,7 +57,8 @@ The application runtime itself does not require Python.
 ## Project Layout
 
 - `vcu_fault_viewer/`: decoder, interface, export logic, and local vendor libraries.
-- `vcu_desktop/`: Electron desktop wrapper and installer configuration.
+- `vcu_webview2/`: lightweight Windows application host and installer configuration.
+- `vcu_desktop/`: legacy Electron wrapper source retained for reference; it is not used by the v5 release.
 - `dds/`: ABB and CGL DDS source text files.
 - `data_sources/`: device and environment mapping source data.
 - `release/`: verified standalone Windows installer.
